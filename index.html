@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1f5f5b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>IRDR Mobile Count</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow">Spokane Stock Yards</p>
+        <h1>IRDR Mobile Count</h1>
+        <p class="hero__lede">
+          Pick the week, choose the facility, and work through the locations from your phone without pen, paper, or a laptop.
+        </p>
+      </div>
+      <div class="hero__badge">
+        <span class="hero__badge-label">Mode</span>
+        <strong>Field Ready</strong>
+      </div>
+    </header>
+
+    <main>
+      <section id="setup-screen" class="screen screen--active">
+        <div class="panel">
+          <div class="panel__header">
+            <h2>Start Count</h2>
+            <p>Select a weekly sample and facility to begin.</p>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span class="field__label">Week</span>
+              <select id="week-select" class="field__control">
+                <option value="">Loading samples...</option>
+              </select>
+            </label>
+
+            <div class="field">
+              <span class="field__label">Facility</span>
+              <div id="facility-options" class="facility-options"></div>
+            </div>
+          </div>
+
+          <div id="selection-summary" class="selection-summary" aria-live="polite">
+            <p class="selection-summary__title">Choose a week and facility to see the sample details.</p>
+            <div class="selection-summary__stats">
+              <div class="stat-card">
+                <span class="stat-card__label">Locations</span>
+                <strong id="summary-locations">--</strong>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card__label">Completed</span>
+                <strong id="summary-completed">--</strong>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card__label">Cases Off</span>
+                <strong id="summary-variance">--</strong>
+              </div>
+            </div>
+            <p id="summary-note" class="selection-summary__note"></p>
+          </div>
+
+          <div class="panel__actions">
+            <button id="start-count" class="button button--primary" disabled>Start Count</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="count-screen" class="screen" aria-live="polite">
+        <div class="panel panel--count">
+          <div class="count-topbar">
+            <button id="back-to-setup" class="button button--ghost" type="button">Back</button>
+            <div class="count-topbar__meta">
+              <span id="active-week" class="pill"></span>
+              <span id="active-facility" class="pill pill--solid"></span>
+            </div>
+          </div>
+
+          <div class="progress-block">
+            <div class="progress-block__labels">
+              <span id="progress-label">Location 1 of 1</span>
+              <span id="progress-stats">0 complete</span>
+            </div>
+            <div class="progress-bar" aria-hidden="true">
+              <div id="progress-fill" class="progress-bar__fill"></div>
+            </div>
+          </div>
+
+          <article class="count-card">
+            <div class="count-card__head">
+              <div>
+                <p class="count-card__kicker">Sample Location</p>
+                <h2 id="card-bin" class="count-card__bin">--</h2>
+              </div>
+              <div class="badge-stack">
+                <span class="count-badge">
+                  Cost Center
+                  <strong id="card-cost-center">--</strong>
+                </span>
+                <span class="count-badge">
+                  Sample #
+                  <strong id="card-order">--</strong>
+                </span>
+              </div>
+            </div>
+
+            <div class="count-card__body">
+              <p id="card-description" class="count-card__description">--</p>
+
+              <div class="counter-panel">
+                <p class="counter-panel__label">Cases Incorrect or Missing</p>
+                <div class="counter-control">
+                  <button id="minus-button" class="counter-button" type="button" aria-label="Decrease case count">-</button>
+                  <output id="variance-count" class="counter-value" aria-live="polite">0</output>
+                  <button id="plus-button" class="counter-button" type="button" aria-label="Increase case count">+</button>
+                </div>
+                <p id="status-text" class="counter-panel__status">No variance recorded for this location.</p>
+              </div>
+
+              <label class="field field--notes">
+                <span class="field__label">Notes</span>
+                <textarea id="notes-input" class="field__control field__control--notes" rows="4" placeholder="Add anything the counter should capture here."></textarea>
+              </label>
+            </div>
+          </article>
+
+          <div class="panel__actions panel__actions--spread">
+            <button id="previous-location" class="button button--secondary" type="button">Previous Location</button>
+            <button id="next-location" class="button button--primary" type="button">Next Location</button>
+          </div>
+
+          <div class="session-tools">
+            <button id="export-results" class="button button--ghost" type="button">Export CSV</button>
+            <button id="reset-session" class="button button--ghost" type="button">Reset Progress</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="facility-option-template">
+    <button class="facility-card" type="button">
+      <span class="facility-card__name"></span>
+      <span class="facility-card__meta"></span>
+    </button>
+  </template>
+
+  <script src="assets/app.js" type="module"></script>
+</body>
+</html>

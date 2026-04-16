@@ -1,0 +1,2880 @@
+{
+  "weeks": [
+    {
+      "id": "2026-04-16",
+      "label": "Week of 2026-04-16",
+      "company": "Spokane Stock Yards",
+      "method": "Cochran sample with finite population correction",
+      "confidenceLevel": "95%",
+      "marginOfError": "5%",
+      "excludedCostCenters": [
+        "9181",
+        "9300"
+      ],
+      "sortOrder": "Cost Center, then Bin Code",
+      "facilities": {
+        "Montgomery": {
+          "population": 2867,
+          "sampleSize": 218,
+          "locations": [
+            {
+              "sampleOrder": 76,
+              "randomDrawOrder": 22,
+              "facility": "Montgomery",
+              "costCenter": 9052,
+              "binCode": 800070101,
+              "binDescription": "80-007-01"
+            },
+            {
+              "sampleOrder": 77,
+              "randomDrawOrder": 91,
+              "facility": "Montgomery",
+              "costCenter": 9052,
+              "binCode": 800250101,
+              "binDescription": "80-025-01"
+            },
+            {
+              "sampleOrder": 78,
+              "randomDrawOrder": 180,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 250380401,
+              "binDescription": "25-038-04"
+            },
+            {
+              "sampleOrder": 79,
+              "randomDrawOrder": 5,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 250580401,
+              "binDescription": "25-058-04"
+            },
+            {
+              "sampleOrder": 80,
+              "randomDrawOrder": 28,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 250700301,
+              "binDescription": "25-070-03"
+            },
+            {
+              "sampleOrder": 81,
+              "randomDrawOrder": 77,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 251000101,
+              "binDescription": "25-100-01"
+            },
+            {
+              "sampleOrder": 82,
+              "randomDrawOrder": 138,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 251000401,
+              "binDescription": "25-100-04"
+            },
+            {
+              "sampleOrder": 83,
+              "randomDrawOrder": 96,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 251500401,
+              "binDescription": "25-150-04"
+            },
+            {
+              "sampleOrder": 84,
+              "randomDrawOrder": 38,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260010301,
+              "binDescription": "26-001-03"
+            },
+            {
+              "sampleOrder": 85,
+              "randomDrawOrder": 150,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260180201,
+              "binDescription": "26-018-02"
+            },
+            {
+              "sampleOrder": 86,
+              "randomDrawOrder": 72,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260680201,
+              "binDescription": "26-068-02"
+            },
+            {
+              "sampleOrder": 87,
+              "randomDrawOrder": 123,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260700101,
+              "binDescription": "26-070-01"
+            },
+            {
+              "sampleOrder": 88,
+              "randomDrawOrder": 201,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260880401,
+              "binDescription": "26-088-04"
+            },
+            {
+              "sampleOrder": 89,
+              "randomDrawOrder": 47,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 260900101,
+              "binDescription": "26-090-01"
+            },
+            {
+              "sampleOrder": 90,
+              "randomDrawOrder": 163,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 261200301,
+              "binDescription": "26-120-03"
+            },
+            {
+              "sampleOrder": 91,
+              "randomDrawOrder": 216,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 261300201,
+              "binDescription": "26-130-02"
+            },
+            {
+              "sampleOrder": 92,
+              "randomDrawOrder": 51,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270010101,
+              "binDescription": "27-001-01"
+            },
+            {
+              "sampleOrder": 93,
+              "randomDrawOrder": 152,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270080301,
+              "binDescription": "27-008-03"
+            },
+            {
+              "sampleOrder": 94,
+              "randomDrawOrder": 11,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270200201,
+              "binDescription": "27-020-02"
+            },
+            {
+              "sampleOrder": 95,
+              "randomDrawOrder": 66,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270200401,
+              "binDescription": "27-020-04"
+            },
+            {
+              "sampleOrder": 96,
+              "randomDrawOrder": 42,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270300101,
+              "binDescription": "27-030-01"
+            },
+            {
+              "sampleOrder": 97,
+              "randomDrawOrder": 92,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270300401,
+              "binDescription": "27-030-04"
+            },
+            {
+              "sampleOrder": 98,
+              "randomDrawOrder": 110,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270580101,
+              "binDescription": "27-058-01"
+            },
+            {
+              "sampleOrder": 99,
+              "randomDrawOrder": 179,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 270980301,
+              "binDescription": "27-098-03"
+            },
+            {
+              "sampleOrder": 100,
+              "randomDrawOrder": 55,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271080201,
+              "binDescription": "27-108-02"
+            },
+            {
+              "sampleOrder": 101,
+              "randomDrawOrder": 48,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271200301,
+              "binDescription": "27-120-03"
+            },
+            {
+              "sampleOrder": 102,
+              "randomDrawOrder": 85,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271200401,
+              "binDescription": "27-120-04"
+            },
+            {
+              "sampleOrder": 103,
+              "randomDrawOrder": 191,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271380301,
+              "binDescription": "27-138-03"
+            },
+            {
+              "sampleOrder": 104,
+              "randomDrawOrder": 136,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271500401,
+              "binDescription": "27-150-04"
+            },
+            {
+              "sampleOrder": 105,
+              "randomDrawOrder": 193,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271580301,
+              "binDescription": "27-158-03"
+            },
+            {
+              "sampleOrder": 106,
+              "randomDrawOrder": 88,
+              "facility": "Montgomery",
+              "costCenter": 9053,
+              "binCode": 271600201,
+              "binDescription": "27-160-02"
+            },
+            {
+              "sampleOrder": 107,
+              "randomDrawOrder": 39,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 4710001,
+              "binDescription": "47-100-01-B"
+            },
+            {
+              "sampleOrder": 108,
+              "randomDrawOrder": 13,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 4711401,
+              "binDescription": "47-114-01-B"
+            },
+            {
+              "sampleOrder": 109,
+              "randomDrawOrder": 1,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 300180201,
+              "binDescription": "30-018-02"
+            },
+            {
+              "sampleOrder": 110,
+              "randomDrawOrder": 79,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 300300101,
+              "binDescription": "30-030-01"
+            },
+            {
+              "sampleOrder": 111,
+              "randomDrawOrder": 46,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 300580301,
+              "binDescription": "30-058-03"
+            },
+            {
+              "sampleOrder": 112,
+              "randomDrawOrder": 200,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 300780101,
+              "binDescription": "30-078-01"
+            },
+            {
+              "sampleOrder": 113,
+              "randomDrawOrder": 142,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 300980301,
+              "binDescription": "30-098-03"
+            },
+            {
+              "sampleOrder": 114,
+              "randomDrawOrder": 113,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 301080101,
+              "binDescription": "30-108-01"
+            },
+            {
+              "sampleOrder": 115,
+              "randomDrawOrder": 27,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 310010101,
+              "binDescription": "31-001-01"
+            },
+            {
+              "sampleOrder": 116,
+              "randomDrawOrder": 59,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 310300301,
+              "binDescription": "31-030-03"
+            },
+            {
+              "sampleOrder": 117,
+              "randomDrawOrder": 58,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 310800101,
+              "binDescription": "31-080-01"
+            },
+            {
+              "sampleOrder": 118,
+              "randomDrawOrder": 53,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320080301,
+              "binDescription": "32-008-03"
+            },
+            {
+              "sampleOrder": 119,
+              "randomDrawOrder": 70,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320100201,
+              "binDescription": "32-010-02"
+            },
+            {
+              "sampleOrder": 120,
+              "randomDrawOrder": 125,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320180301,
+              "binDescription": "32-018-03"
+            },
+            {
+              "sampleOrder": 121,
+              "randomDrawOrder": 17,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320200101,
+              "binDescription": "32-020-01"
+            },
+            {
+              "sampleOrder": 122,
+              "randomDrawOrder": 6,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320300301,
+              "binDescription": "32-030-03"
+            },
+            {
+              "sampleOrder": 123,
+              "randomDrawOrder": 86,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320400101,
+              "binDescription": "32-040-01"
+            },
+            {
+              "sampleOrder": 124,
+              "randomDrawOrder": 177,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320700201,
+              "binDescription": "32-070-02"
+            },
+            {
+              "sampleOrder": 125,
+              "randomDrawOrder": 16,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320780301,
+              "binDescription": "32-078-03"
+            },
+            {
+              "sampleOrder": 126,
+              "randomDrawOrder": 174,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 320900101,
+              "binDescription": "32-090-01"
+            },
+            {
+              "sampleOrder": 127,
+              "randomDrawOrder": 218,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 321280101,
+              "binDescription": "32-128-01"
+            },
+            {
+              "sampleOrder": 128,
+              "randomDrawOrder": 164,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 330180101,
+              "binDescription": "33-018-01"
+            },
+            {
+              "sampleOrder": 129,
+              "randomDrawOrder": 134,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 330800101,
+              "binDescription": "33-080-01"
+            },
+            {
+              "sampleOrder": 130,
+              "randomDrawOrder": 44,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 331100301,
+              "binDescription": "33-110-03"
+            },
+            {
+              "sampleOrder": 131,
+              "randomDrawOrder": 34,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 331200201,
+              "binDescription": "33-120-02"
+            },
+            {
+              "sampleOrder": 132,
+              "randomDrawOrder": 49,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340080101,
+              "binDescription": "34-008-01"
+            },
+            {
+              "sampleOrder": 133,
+              "randomDrawOrder": 3,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340180201,
+              "binDescription": "34-018-02"
+            },
+            {
+              "sampleOrder": 134,
+              "randomDrawOrder": 153,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340200101,
+              "binDescription": "34-020-01"
+            },
+            {
+              "sampleOrder": 135,
+              "randomDrawOrder": 71,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340340401,
+              "binDescription": "34-034-04"
+            },
+            {
+              "sampleOrder": 136,
+              "randomDrawOrder": 116,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340440201,
+              "binDescription": "34-044-02"
+            },
+            {
+              "sampleOrder": 137,
+              "randomDrawOrder": 212,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340500101,
+              "binDescription": "34-050-01"
+            },
+            {
+              "sampleOrder": 138,
+              "randomDrawOrder": 2,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340580301,
+              "binDescription": "34-058-03"
+            },
+            {
+              "sampleOrder": 139,
+              "randomDrawOrder": 168,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340580401,
+              "binDescription": "34-058-04"
+            },
+            {
+              "sampleOrder": 140,
+              "randomDrawOrder": 133,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340680401,
+              "binDescription": "34-068-04"
+            },
+            {
+              "sampleOrder": 141,
+              "randomDrawOrder": 107,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340700301,
+              "binDescription": "34-070-03"
+            },
+            {
+              "sampleOrder": 142,
+              "randomDrawOrder": 98,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340780201,
+              "binDescription": "34-078-02"
+            },
+            {
+              "sampleOrder": 143,
+              "randomDrawOrder": 198,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 340800401,
+              "binDescription": "34-080-04"
+            },
+            {
+              "sampleOrder": 144,
+              "randomDrawOrder": 9,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350080301,
+              "binDescription": "35-008-03"
+            },
+            {
+              "sampleOrder": 145,
+              "randomDrawOrder": 120,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350180301,
+              "binDescription": "35-018-03"
+            },
+            {
+              "sampleOrder": 146,
+              "randomDrawOrder": 192,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350240101,
+              "binDescription": "35-024-01"
+            },
+            {
+              "sampleOrder": 147,
+              "randomDrawOrder": 21,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350400201,
+              "binDescription": "35-040-02"
+            },
+            {
+              "sampleOrder": 148,
+              "randomDrawOrder": 97,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350440401,
+              "binDescription": "35-044-04"
+            },
+            {
+              "sampleOrder": 149,
+              "randomDrawOrder": 132,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350600101,
+              "binDescription": "35-060-01"
+            },
+            {
+              "sampleOrder": 150,
+              "randomDrawOrder": 206,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350640401,
+              "binDescription": "35-064-04"
+            },
+            {
+              "sampleOrder": 151,
+              "randomDrawOrder": 56,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 350680301,
+              "binDescription": "35-068-03"
+            },
+            {
+              "sampleOrder": 152,
+              "randomDrawOrder": 140,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 360100301,
+              "binDescription": "36-010-03"
+            },
+            {
+              "sampleOrder": 153,
+              "randomDrawOrder": 211,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 360300401,
+              "binDescription": "36-030-04"
+            },
+            {
+              "sampleOrder": 154,
+              "randomDrawOrder": 128,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 360500401,
+              "binDescription": "36-050-04"
+            },
+            {
+              "sampleOrder": 155,
+              "randomDrawOrder": 50,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 360900201,
+              "binDescription": "36-090-02"
+            },
+            {
+              "sampleOrder": 156,
+              "randomDrawOrder": 84,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 360900301,
+              "binDescription": "36-090-03"
+            },
+            {
+              "sampleOrder": 157,
+              "randomDrawOrder": 154,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 361180201,
+              "binDescription": "36-118-02"
+            },
+            {
+              "sampleOrder": 158,
+              "randomDrawOrder": 184,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370100301,
+              "binDescription": "37-010-03"
+            },
+            {
+              "sampleOrder": 159,
+              "randomDrawOrder": 108,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370180101,
+              "binDescription": "37-018-01"
+            },
+            {
+              "sampleOrder": 160,
+              "randomDrawOrder": 75,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370300201,
+              "binDescription": "37-030-02"
+            },
+            {
+              "sampleOrder": 161,
+              "randomDrawOrder": 167,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370300301,
+              "binDescription": "37-030-03"
+            },
+            {
+              "sampleOrder": 162,
+              "randomDrawOrder": 73,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370380401,
+              "binDescription": "37-038-04"
+            },
+            {
+              "sampleOrder": 163,
+              "randomDrawOrder": 26,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370400101,
+              "binDescription": "37-040-01"
+            },
+            {
+              "sampleOrder": 164,
+              "randomDrawOrder": 43,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370400401,
+              "binDescription": "37-040-04"
+            },
+            {
+              "sampleOrder": 165,
+              "randomDrawOrder": 182,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370500201,
+              "binDescription": "37-050-02"
+            },
+            {
+              "sampleOrder": 166,
+              "randomDrawOrder": 147,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370600401,
+              "binDescription": "37-060-04"
+            },
+            {
+              "sampleOrder": 167,
+              "randomDrawOrder": 204,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370900301,
+              "binDescription": "37-090-03"
+            },
+            {
+              "sampleOrder": 168,
+              "randomDrawOrder": 41,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 370900401,
+              "binDescription": "37-090-04"
+            },
+            {
+              "sampleOrder": 169,
+              "randomDrawOrder": 52,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 371200101,
+              "binDescription": "37-120-01"
+            },
+            {
+              "sampleOrder": 170,
+              "randomDrawOrder": 29,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380010101,
+              "binDescription": "38-001-01"
+            },
+            {
+              "sampleOrder": 171,
+              "randomDrawOrder": 81,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380180101,
+              "binDescription": "38-018-01"
+            },
+            {
+              "sampleOrder": 172,
+              "randomDrawOrder": 115,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380240301,
+              "binDescription": "38-024-03"
+            },
+            {
+              "sampleOrder": 173,
+              "randomDrawOrder": 82,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380340101,
+              "binDescription": "38-034-01"
+            },
+            {
+              "sampleOrder": 174,
+              "randomDrawOrder": 137,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380740401,
+              "binDescription": "38-074-04"
+            },
+            {
+              "sampleOrder": 175,
+              "randomDrawOrder": 189,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380780201,
+              "binDescription": "38-078-02"
+            },
+            {
+              "sampleOrder": 176,
+              "randomDrawOrder": 30,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 380800401,
+              "binDescription": "38-080-04"
+            },
+            {
+              "sampleOrder": 177,
+              "randomDrawOrder": 83,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390080201,
+              "binDescription": "39-008-02"
+            },
+            {
+              "sampleOrder": 178,
+              "randomDrawOrder": 149,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390080401,
+              "binDescription": "39-008-04"
+            },
+            {
+              "sampleOrder": 179,
+              "randomDrawOrder": 31,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390340201,
+              "binDescription": "39-034-02"
+            },
+            {
+              "sampleOrder": 180,
+              "randomDrawOrder": 61,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390480201,
+              "binDescription": "39-048-02"
+            },
+            {
+              "sampleOrder": 181,
+              "randomDrawOrder": 68,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390580401,
+              "binDescription": "39-058-04"
+            },
+            {
+              "sampleOrder": 182,
+              "randomDrawOrder": 139,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 390780101,
+              "binDescription": "39-078-01"
+            },
+            {
+              "sampleOrder": 183,
+              "randomDrawOrder": 117,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400080301,
+              "binDescription": "40-008-03"
+            },
+            {
+              "sampleOrder": 184,
+              "randomDrawOrder": 67,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400180101,
+              "binDescription": "40-018-01"
+            },
+            {
+              "sampleOrder": 185,
+              "randomDrawOrder": 129,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400180401,
+              "binDescription": "40-018-04"
+            },
+            {
+              "sampleOrder": 186,
+              "randomDrawOrder": 78,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400280401,
+              "binDescription": "40-028-04"
+            },
+            {
+              "sampleOrder": 187,
+              "randomDrawOrder": 162,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400300301,
+              "binDescription": "40-030-03"
+            },
+            {
+              "sampleOrder": 188,
+              "randomDrawOrder": 102,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400600401,
+              "binDescription": "40-060-04"
+            },
+            {
+              "sampleOrder": 189,
+              "randomDrawOrder": 203,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 400980301,
+              "binDescription": "40-098-03"
+            },
+            {
+              "sampleOrder": 190,
+              "randomDrawOrder": 7,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 401080201,
+              "binDescription": "40-108-02"
+            },
+            {
+              "sampleOrder": 191,
+              "randomDrawOrder": 45,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 410010201,
+              "binDescription": "41-001-02"
+            },
+            {
+              "sampleOrder": 192,
+              "randomDrawOrder": 135,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 410100201,
+              "binDescription": "41-010-02"
+            },
+            {
+              "sampleOrder": 193,
+              "randomDrawOrder": 74,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 410180301,
+              "binDescription": "41-018-03"
+            },
+            {
+              "sampleOrder": 194,
+              "randomDrawOrder": 148,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 410200201,
+              "binDescription": "41-020-02"
+            },
+            {
+              "sampleOrder": 195,
+              "randomDrawOrder": 18,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 410480201,
+              "binDescription": "41-048-02"
+            },
+            {
+              "sampleOrder": 196,
+              "randomDrawOrder": 14,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 420400201,
+              "binDescription": "42-040-02"
+            },
+            {
+              "sampleOrder": 197,
+              "randomDrawOrder": 8,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 430300301,
+              "binDescription": "43-030-03"
+            },
+            {
+              "sampleOrder": 198,
+              "randomDrawOrder": 23,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 470280301,
+              "binDescription": "47-028-03"
+            },
+            {
+              "sampleOrder": 199,
+              "randomDrawOrder": 217,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 470300101,
+              "binDescription": "47-030-01"
+            },
+            {
+              "sampleOrder": 200,
+              "randomDrawOrder": 76,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 470400201,
+              "binDescription": "47-040-02"
+            },
+            {
+              "sampleOrder": 201,
+              "randomDrawOrder": 145,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 470640201,
+              "binDescription": "47-064-02"
+            },
+            {
+              "sampleOrder": 202,
+              "randomDrawOrder": 210,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 471180301,
+              "binDescription": "47-118-03"
+            },
+            {
+              "sampleOrder": 203,
+              "randomDrawOrder": 69,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480140201,
+              "binDescription": "48-014-02"
+            },
+            {
+              "sampleOrder": 204,
+              "randomDrawOrder": 87,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480280101,
+              "binDescription": "48-028-01"
+            },
+            {
+              "sampleOrder": 205,
+              "randomDrawOrder": 158,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480440101,
+              "binDescription": "48-044-01"
+            },
+            {
+              "sampleOrder": 206,
+              "randomDrawOrder": 213,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480540201,
+              "binDescription": "48-054-02"
+            },
+            {
+              "sampleOrder": 207,
+              "randomDrawOrder": 202,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480540301,
+              "binDescription": "48-054-03"
+            },
+            {
+              "sampleOrder": 208,
+              "randomDrawOrder": 95,
+              "facility": "Montgomery",
+              "costCenter": 9054,
+              "binCode": 480640101,
+              "binDescription": "48-064-01"
+            },
+            {
+              "sampleOrder": 209,
+              "randomDrawOrder": 199,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600040101,
+              "binDescription": "60-004-01"
+            },
+            {
+              "sampleOrder": 210,
+              "randomDrawOrder": 122,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600100301,
+              "binDescription": "60-010-03"
+            },
+            {
+              "sampleOrder": 211,
+              "randomDrawOrder": 144,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600110301,
+              "binDescription": "60-011-03"
+            },
+            {
+              "sampleOrder": 212,
+              "randomDrawOrder": 111,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600140201,
+              "binDescription": "60-014-02"
+            },
+            {
+              "sampleOrder": 213,
+              "randomDrawOrder": 161,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600140301,
+              "binDescription": "60-014-03"
+            },
+            {
+              "sampleOrder": 214,
+              "randomDrawOrder": 146,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600240401,
+              "binDescription": "60-024-04"
+            },
+            {
+              "sampleOrder": 215,
+              "randomDrawOrder": 155,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600270301,
+              "binDescription": "60-027-03"
+            },
+            {
+              "sampleOrder": 216,
+              "randomDrawOrder": 170,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600280101,
+              "binDescription": "60-028-01"
+            },
+            {
+              "sampleOrder": 217,
+              "randomDrawOrder": 63,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600280301,
+              "binDescription": "60-028-03"
+            },
+            {
+              "sampleOrder": 218,
+              "randomDrawOrder": 19,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600290101,
+              "binDescription": "60-029-01"
+            },
+            {
+              "sampleOrder": 219,
+              "randomDrawOrder": 37,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600300201,
+              "binDescription": "60-030-02"
+            },
+            {
+              "sampleOrder": 220,
+              "randomDrawOrder": 4,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600320101,
+              "binDescription": "60-032-01"
+            },
+            {
+              "sampleOrder": 221,
+              "randomDrawOrder": 62,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600330401,
+              "binDescription": "60-033-04"
+            },
+            {
+              "sampleOrder": 222,
+              "randomDrawOrder": 208,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600340101,
+              "binDescription": "60-034-01"
+            },
+            {
+              "sampleOrder": 223,
+              "randomDrawOrder": 10,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600340401,
+              "binDescription": "60-034-04"
+            },
+            {
+              "sampleOrder": 224,
+              "randomDrawOrder": 118,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600350301,
+              "binDescription": "60-035-03"
+            },
+            {
+              "sampleOrder": 225,
+              "randomDrawOrder": 130,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600360201,
+              "binDescription": "60-036-02"
+            },
+            {
+              "sampleOrder": 226,
+              "randomDrawOrder": 160,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600420301,
+              "binDescription": "60-042-03"
+            },
+            {
+              "sampleOrder": 227,
+              "randomDrawOrder": 89,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600430201,
+              "binDescription": "60-043-02"
+            },
+            {
+              "sampleOrder": 228,
+              "randomDrawOrder": 176,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600530401,
+              "binDescription": "60-053-04"
+            },
+            {
+              "sampleOrder": 229,
+              "randomDrawOrder": 183,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600590401,
+              "binDescription": "60-059-04"
+            },
+            {
+              "sampleOrder": 230,
+              "randomDrawOrder": 215,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600640401,
+              "binDescription": "60-064-04"
+            },
+            {
+              "sampleOrder": 231,
+              "randomDrawOrder": 60,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600690101,
+              "binDescription": "60-069-01"
+            },
+            {
+              "sampleOrder": 232,
+              "randomDrawOrder": 32,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600700101,
+              "binDescription": "60-070-01"
+            },
+            {
+              "sampleOrder": 233,
+              "randomDrawOrder": 173,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600700401,
+              "binDescription": "60-070-04"
+            },
+            {
+              "sampleOrder": 234,
+              "randomDrawOrder": 214,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600750401,
+              "binDescription": "60-075-04"
+            },
+            {
+              "sampleOrder": 235,
+              "randomDrawOrder": 127,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600780301,
+              "binDescription": "60-078-03"
+            },
+            {
+              "sampleOrder": 236,
+              "randomDrawOrder": 106,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600800301,
+              "binDescription": "60-080-03"
+            },
+            {
+              "sampleOrder": 237,
+              "randomDrawOrder": 166,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600810101,
+              "binDescription": "60-081-01"
+            },
+            {
+              "sampleOrder": 238,
+              "randomDrawOrder": 105,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600840401,
+              "binDescription": "60-084-04"
+            },
+            {
+              "sampleOrder": 239,
+              "randomDrawOrder": 190,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600870301,
+              "binDescription": "60-087-03"
+            },
+            {
+              "sampleOrder": 240,
+              "randomDrawOrder": 172,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 600880401,
+              "binDescription": "60-088-04"
+            },
+            {
+              "sampleOrder": 241,
+              "randomDrawOrder": 109,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601010401,
+              "binDescription": "60-101-04"
+            },
+            {
+              "sampleOrder": 242,
+              "randomDrawOrder": 187,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601030301,
+              "binDescription": "60-103-03"
+            },
+            {
+              "sampleOrder": 243,
+              "randomDrawOrder": 93,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601080201,
+              "binDescription": "60-108-02"
+            },
+            {
+              "sampleOrder": 244,
+              "randomDrawOrder": 143,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601090101,
+              "binDescription": "60-109-01"
+            },
+            {
+              "sampleOrder": 245,
+              "randomDrawOrder": 25,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601110101,
+              "binDescription": "60-111-01"
+            },
+            {
+              "sampleOrder": 246,
+              "randomDrawOrder": 112,
+              "facility": "Montgomery",
+              "costCenter": 9055,
+              "binCode": 601150401,
+              "binDescription": "60-115-04"
+            },
+            {
+              "sampleOrder": 247,
+              "randomDrawOrder": 90,
+              "facility": "Montgomery",
+              "costCenter": 9056,
+              "binCode": 700190102,
+              "binDescription": "70-019-01"
+            },
+            {
+              "sampleOrder": 248,
+              "randomDrawOrder": 205,
+              "facility": "Montgomery",
+              "costCenter": 9056,
+              "binCode": 700250102,
+              "binDescription": "70-025-01"
+            },
+            {
+              "sampleOrder": 276,
+              "randomDrawOrder": 197,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4000390301,
+              "binDescription": "400-039-03-01"
+            },
+            {
+              "sampleOrder": 277,
+              "randomDrawOrder": 64,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4000690301,
+              "binDescription": "400-069-03-01"
+            },
+            {
+              "sampleOrder": 278,
+              "randomDrawOrder": 65,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4001210101,
+              "binDescription": "400-121-01-01"
+            },
+            {
+              "sampleOrder": 279,
+              "randomDrawOrder": 119,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4001310201,
+              "binDescription": "400-131-02-01"
+            },
+            {
+              "sampleOrder": 280,
+              "randomDrawOrder": 99,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4001590201,
+              "binDescription": "400-159-02-01"
+            },
+            {
+              "sampleOrder": 281,
+              "randomDrawOrder": 33,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4001690301,
+              "binDescription": "400-169-03-01"
+            },
+            {
+              "sampleOrder": 282,
+              "randomDrawOrder": 12,
+              "facility": "Montgomery",
+              "costCenter": 9082,
+              "binCode": 4001790301,
+              "binDescription": "400-179-03-01"
+            },
+            {
+              "sampleOrder": 316,
+              "randomDrawOrder": 121,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 500800301,
+              "binDescription": "50-080-03"
+            },
+            {
+              "sampleOrder": 317,
+              "randomDrawOrder": 171,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 501800101,
+              "binDescription": "50-180-01"
+            },
+            {
+              "sampleOrder": 318,
+              "randomDrawOrder": 40,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 501900301,
+              "binDescription": "50-190-03"
+            },
+            {
+              "sampleOrder": 319,
+              "randomDrawOrder": 207,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 510100101,
+              "binDescription": "51-010-01"
+            },
+            {
+              "sampleOrder": 320,
+              "randomDrawOrder": 169,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 510700201,
+              "binDescription": "51-070-02"
+            },
+            {
+              "sampleOrder": 321,
+              "randomDrawOrder": 141,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 520040101,
+              "binDescription": "52-004-01"
+            },
+            {
+              "sampleOrder": 322,
+              "randomDrawOrder": 101,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 520080301,
+              "binDescription": "52-008-03"
+            },
+            {
+              "sampleOrder": 323,
+              "randomDrawOrder": 159,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 520200301,
+              "binDescription": "52-020-03"
+            },
+            {
+              "sampleOrder": 324,
+              "randomDrawOrder": 131,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 520240301,
+              "binDescription": "52-024-03"
+            },
+            {
+              "sampleOrder": 325,
+              "randomDrawOrder": 15,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530010101,
+              "binDescription": "53-001-01"
+            },
+            {
+              "sampleOrder": 326,
+              "randomDrawOrder": 157,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530100401,
+              "binDescription": "53-010-04"
+            },
+            {
+              "sampleOrder": 327,
+              "randomDrawOrder": 103,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530240101,
+              "binDescription": "53-024-01"
+            },
+            {
+              "sampleOrder": 328,
+              "randomDrawOrder": 114,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530300201,
+              "binDescription": "53-030-02"
+            },
+            {
+              "sampleOrder": 329,
+              "randomDrawOrder": 195,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530500101,
+              "binDescription": "53-050-01"
+            },
+            {
+              "sampleOrder": 330,
+              "randomDrawOrder": 24,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530540201,
+              "binDescription": "53-054-02"
+            },
+            {
+              "sampleOrder": 331,
+              "randomDrawOrder": 209,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530680101,
+              "binDescription": "53-068-01"
+            },
+            {
+              "sampleOrder": 332,
+              "randomDrawOrder": 54,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 530680201,
+              "binDescription": "53-068-02"
+            },
+            {
+              "sampleOrder": 333,
+              "randomDrawOrder": 35,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 540800301,
+              "binDescription": "54-080-03"
+            },
+            {
+              "sampleOrder": 334,
+              "randomDrawOrder": 20,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 541500301,
+              "binDescription": "54-150-03"
+            },
+            {
+              "sampleOrder": 335,
+              "randomDrawOrder": 186,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 550080301,
+              "binDescription": "55-008-03"
+            },
+            {
+              "sampleOrder": 336,
+              "randomDrawOrder": 156,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 550100101,
+              "binDescription": "55-010-01"
+            },
+            {
+              "sampleOrder": 337,
+              "randomDrawOrder": 80,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 550200101,
+              "binDescription": "55-020-01"
+            },
+            {
+              "sampleOrder": 338,
+              "randomDrawOrder": 36,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 550200201,
+              "binDescription": "55-020-02"
+            },
+            {
+              "sampleOrder": 339,
+              "randomDrawOrder": 151,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560080201,
+              "binDescription": "56-008-02"
+            },
+            {
+              "sampleOrder": 340,
+              "randomDrawOrder": 100,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560080401,
+              "binDescription": "56-008-04"
+            },
+            {
+              "sampleOrder": 341,
+              "randomDrawOrder": 178,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560240301,
+              "binDescription": "56-024-03"
+            },
+            {
+              "sampleOrder": 342,
+              "randomDrawOrder": 165,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560240401,
+              "binDescription": "56-024-04"
+            },
+            {
+              "sampleOrder": 343,
+              "randomDrawOrder": 185,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560280101,
+              "binDescription": "56-028-01"
+            },
+            {
+              "sampleOrder": 344,
+              "randomDrawOrder": 188,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560380101,
+              "binDescription": "56-038-01"
+            },
+            {
+              "sampleOrder": 345,
+              "randomDrawOrder": 194,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560480301,
+              "binDescription": "56-048-03"
+            },
+            {
+              "sampleOrder": 346,
+              "randomDrawOrder": 104,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560540401,
+              "binDescription": "56-054-04"
+            },
+            {
+              "sampleOrder": 347,
+              "randomDrawOrder": 57,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560640101,
+              "binDescription": "56-064-01"
+            },
+            {
+              "sampleOrder": 348,
+              "randomDrawOrder": 94,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 560680401,
+              "binDescription": "56-068-04"
+            },
+            {
+              "sampleOrder": 349,
+              "randomDrawOrder": 181,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 570200201,
+              "binDescription": "57-020-02"
+            },
+            {
+              "sampleOrder": 350,
+              "randomDrawOrder": 175,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 570600101,
+              "binDescription": "57-060-01"
+            },
+            {
+              "sampleOrder": 351,
+              "randomDrawOrder": 196,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 570600201,
+              "binDescription": "57-060-02"
+            },
+            {
+              "sampleOrder": 352,
+              "randomDrawOrder": 126,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 571300101,
+              "binDescription": "57-130-01"
+            },
+            {
+              "sampleOrder": 353,
+              "randomDrawOrder": 124,
+              "facility": "Montgomery",
+              "costCenter": 9112,
+              "binCode": 580200201,
+              "binDescription": "58-020-02"
+            }
+          ]
+        },
+        "McKinnon": {
+          "population": 1824,
+          "sampleSize": 138,
+          "locations": [
+            {
+              "sampleOrder": 1,
+              "randomDrawOrder": 293,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100090301,
+              "binDescription": "10-009-03"
+            },
+            {
+              "sampleOrder": 2,
+              "randomDrawOrder": 223,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100100201,
+              "binDescription": "10-010-02"
+            },
+            {
+              "sampleOrder": 3,
+              "randomDrawOrder": 310,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100200101,
+              "binDescription": "10-020-01"
+            },
+            {
+              "sampleOrder": 4,
+              "randomDrawOrder": 286,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100300101,
+              "binDescription": "10-030-01"
+            },
+            {
+              "sampleOrder": 5,
+              "randomDrawOrder": 347,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100700201,
+              "binDescription": "10-070-02"
+            },
+            {
+              "sampleOrder": 6,
+              "randomDrawOrder": 265,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100810101,
+              "binDescription": "10-081-01"
+            },
+            {
+              "sampleOrder": 7,
+              "randomDrawOrder": 344,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 100880101,
+              "binDescription": "10-088-01"
+            },
+            {
+              "sampleOrder": 8,
+              "randomDrawOrder": 222,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 101010101,
+              "binDescription": "10-101-01"
+            },
+            {
+              "sampleOrder": 9,
+              "randomDrawOrder": 348,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 101090201,
+              "binDescription": "10-109-02"
+            },
+            {
+              "sampleOrder": 10,
+              "randomDrawOrder": 240,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 101390101,
+              "binDescription": "10-139-01"
+            },
+            {
+              "sampleOrder": 11,
+              "randomDrawOrder": 330,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 101390301,
+              "binDescription": "10-139-03"
+            },
+            {
+              "sampleOrder": 12,
+              "randomDrawOrder": 250,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110020101,
+              "binDescription": "11-002-01"
+            },
+            {
+              "sampleOrder": 13,
+              "randomDrawOrder": 233,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110020301,
+              "binDescription": "11-002-03"
+            },
+            {
+              "sampleOrder": 14,
+              "randomDrawOrder": 285,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110180301,
+              "binDescription": "11-018-03"
+            },
+            {
+              "sampleOrder": 15,
+              "randomDrawOrder": 287,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110190101,
+              "binDescription": "11-019-01"
+            },
+            {
+              "sampleOrder": 16,
+              "randomDrawOrder": 272,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110280101,
+              "binDescription": "11-028-01"
+            },
+            {
+              "sampleOrder": 17,
+              "randomDrawOrder": 295,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110280201,
+              "binDescription": "11-028-02"
+            },
+            {
+              "sampleOrder": 18,
+              "randomDrawOrder": 234,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110280301,
+              "binDescription": "11-028-03"
+            },
+            {
+              "sampleOrder": 19,
+              "randomDrawOrder": 255,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110580101,
+              "binDescription": "11-058-01"
+            },
+            {
+              "sampleOrder": 20,
+              "randomDrawOrder": 236,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110580201,
+              "binDescription": "11-058-02"
+            },
+            {
+              "sampleOrder": 21,
+              "randomDrawOrder": 276,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110610101,
+              "binDescription": "11-061-01"
+            },
+            {
+              "sampleOrder": 22,
+              "randomDrawOrder": 292,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110800101,
+              "binDescription": "11-080-01"
+            },
+            {
+              "sampleOrder": 23,
+              "randomDrawOrder": 220,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110880101,
+              "binDescription": "11-088-01"
+            },
+            {
+              "sampleOrder": 24,
+              "randomDrawOrder": 321,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 110880301,
+              "binDescription": "11-088-03"
+            },
+            {
+              "sampleOrder": 25,
+              "randomDrawOrder": 340,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 111000101,
+              "binDescription": "11-100-01"
+            },
+            {
+              "sampleOrder": 26,
+              "randomDrawOrder": 271,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 111000201,
+              "binDescription": "11-100-02"
+            },
+            {
+              "sampleOrder": 27,
+              "randomDrawOrder": 322,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 111280301,
+              "binDescription": "11-128-03"
+            },
+            {
+              "sampleOrder": 28,
+              "randomDrawOrder": 318,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120190101,
+              "binDescription": "12-019-01"
+            },
+            {
+              "sampleOrder": 29,
+              "randomDrawOrder": 284,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120210201,
+              "binDescription": "12-021-02"
+            },
+            {
+              "sampleOrder": 30,
+              "randomDrawOrder": 342,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120290201,
+              "binDescription": "12-029-02"
+            },
+            {
+              "sampleOrder": 31,
+              "randomDrawOrder": 282,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120300101,
+              "binDescription": "12-030-01"
+            },
+            {
+              "sampleOrder": 32,
+              "randomDrawOrder": 278,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120400301,
+              "binDescription": "12-040-03"
+            },
+            {
+              "sampleOrder": 33,
+              "randomDrawOrder": 304,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120410201,
+              "binDescription": "12-041-02"
+            },
+            {
+              "sampleOrder": 34,
+              "randomDrawOrder": 263,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120480301,
+              "binDescription": "12-048-03"
+            },
+            {
+              "sampleOrder": 35,
+              "randomDrawOrder": 249,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120580101,
+              "binDescription": "12-058-01"
+            },
+            {
+              "sampleOrder": 36,
+              "randomDrawOrder": 256,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120610201,
+              "binDescription": "12-061-02"
+            },
+            {
+              "sampleOrder": 37,
+              "randomDrawOrder": 349,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120700301,
+              "binDescription": "12-070-03"
+            },
+            {
+              "sampleOrder": 38,
+              "randomDrawOrder": 343,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120710201,
+              "binDescription": "12-071-02"
+            },
+            {
+              "sampleOrder": 39,
+              "randomDrawOrder": 314,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120810301,
+              "binDescription": "12-081-03"
+            },
+            {
+              "sampleOrder": 40,
+              "randomDrawOrder": 219,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 120880301,
+              "binDescription": "12-088-03"
+            },
+            {
+              "sampleOrder": 41,
+              "randomDrawOrder": 341,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 121080201,
+              "binDescription": "12-108-02"
+            },
+            {
+              "sampleOrder": 42,
+              "randomDrawOrder": 320,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 121080301,
+              "binDescription": "12-108-03"
+            },
+            {
+              "sampleOrder": 43,
+              "randomDrawOrder": 279,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130020201,
+              "binDescription": "13-002-02"
+            },
+            {
+              "sampleOrder": 44,
+              "randomDrawOrder": 316,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130020501,
+              "binDescription": "13-002-05"
+            },
+            {
+              "sampleOrder": 45,
+              "randomDrawOrder": 226,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130100501,
+              "binDescription": "13-010-05"
+            },
+            {
+              "sampleOrder": 46,
+              "randomDrawOrder": 253,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130110401,
+              "binDescription": "13-011-04"
+            },
+            {
+              "sampleOrder": 47,
+              "randomDrawOrder": 299,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130110501,
+              "binDescription": "13-011-05"
+            },
+            {
+              "sampleOrder": 48,
+              "randomDrawOrder": 298,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130190201,
+              "binDescription": "13-019-02"
+            },
+            {
+              "sampleOrder": 49,
+              "randomDrawOrder": 275,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130190501,
+              "binDescription": "13-019-05"
+            },
+            {
+              "sampleOrder": 50,
+              "randomDrawOrder": 269,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130290301,
+              "binDescription": "13-029-03"
+            },
+            {
+              "sampleOrder": 51,
+              "randomDrawOrder": 237,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130480301,
+              "binDescription": "13-048-03"
+            },
+            {
+              "sampleOrder": 52,
+              "randomDrawOrder": 336,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130500501,
+              "binDescription": "13-050-05"
+            },
+            {
+              "sampleOrder": 53,
+              "randomDrawOrder": 283,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130580501,
+              "binDescription": "13-058-05"
+            },
+            {
+              "sampleOrder": 54,
+              "randomDrawOrder": 235,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130590301,
+              "binDescription": "13-059-03"
+            },
+            {
+              "sampleOrder": 55,
+              "randomDrawOrder": 337,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130680401,
+              "binDescription": "13-068-04"
+            },
+            {
+              "sampleOrder": 56,
+              "randomDrawOrder": 229,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130700101,
+              "binDescription": "13-070-01"
+            },
+            {
+              "sampleOrder": 57,
+              "randomDrawOrder": 262,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130710301,
+              "binDescription": "13-071-03"
+            },
+            {
+              "sampleOrder": 58,
+              "randomDrawOrder": 354,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130780201,
+              "binDescription": "13-078-02"
+            },
+            {
+              "sampleOrder": 59,
+              "randomDrawOrder": 247,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 130910101,
+              "binDescription": "13-091-01"
+            },
+            {
+              "sampleOrder": 60,
+              "randomDrawOrder": 308,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 131000201,
+              "binDescription": "13-100-02"
+            },
+            {
+              "sampleOrder": 61,
+              "randomDrawOrder": 241,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 131080301,
+              "binDescription": "13-108-03"
+            },
+            {
+              "sampleOrder": 62,
+              "randomDrawOrder": 353,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 131210301,
+              "binDescription": "13-121-03"
+            },
+            {
+              "sampleOrder": 63,
+              "randomDrawOrder": 331,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 131290101,
+              "binDescription": "13-129-01"
+            },
+            {
+              "sampleOrder": 64,
+              "randomDrawOrder": 266,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 140010101,
+              "binDescription": "14-001-01"
+            },
+            {
+              "sampleOrder": 65,
+              "randomDrawOrder": 258,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 140090301,
+              "binDescription": "14-009-03"
+            },
+            {
+              "sampleOrder": 66,
+              "randomDrawOrder": 289,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 140110101,
+              "binDescription": "14-011-01"
+            },
+            {
+              "sampleOrder": 67,
+              "randomDrawOrder": 301,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 140610101,
+              "binDescription": "14-061-01"
+            },
+            {
+              "sampleOrder": 68,
+              "randomDrawOrder": 270,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 140610301,
+              "binDescription": "14-061-03"
+            },
+            {
+              "sampleOrder": 69,
+              "randomDrawOrder": 329,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150010101,
+              "binDescription": "15-001-01"
+            },
+            {
+              "sampleOrder": 70,
+              "randomDrawOrder": 355,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150010201,
+              "binDescription": "15-001-02"
+            },
+            {
+              "sampleOrder": 71,
+              "randomDrawOrder": 300,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150110101,
+              "binDescription": "15-011-01"
+            },
+            {
+              "sampleOrder": 72,
+              "randomDrawOrder": 267,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150190201,
+              "binDescription": "15-019-02"
+            },
+            {
+              "sampleOrder": 73,
+              "randomDrawOrder": 243,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150310201,
+              "binDescription": "15-031-02"
+            },
+            {
+              "sampleOrder": 74,
+              "randomDrawOrder": 345,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150690301,
+              "binDescription": "15-069-03"
+            },
+            {
+              "sampleOrder": 75,
+              "randomDrawOrder": 225,
+              "facility": "McKinnon",
+              "costCenter": 9051,
+              "binCode": 150710101,
+              "binDescription": "15-071-01"
+            },
+            {
+              "sampleOrder": 249,
+              "randomDrawOrder": 273,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3000290301,
+              "binDescription": "300-29-3"
+            },
+            {
+              "sampleOrder": 250,
+              "randomDrawOrder": 254,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3000490201,
+              "binDescription": "300-49-2"
+            },
+            {
+              "sampleOrder": 251,
+              "randomDrawOrder": 312,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3000590201,
+              "binDescription": "300-59-2"
+            },
+            {
+              "sampleOrder": 252,
+              "randomDrawOrder": 303,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3000590401,
+              "binDescription": "300-59-4"
+            },
+            {
+              "sampleOrder": 253,
+              "randomDrawOrder": 323,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3010190201,
+              "binDescription": "301-19-2"
+            },
+            {
+              "sampleOrder": 254,
+              "randomDrawOrder": 277,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3010210101,
+              "binDescription": "301-21-1"
+            },
+            {
+              "sampleOrder": 255,
+              "randomDrawOrder": 324,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3010390201,
+              "binDescription": "301-39-2"
+            },
+            {
+              "sampleOrder": 256,
+              "randomDrawOrder": 307,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3020010201,
+              "binDescription": "302-01-2"
+            },
+            {
+              "sampleOrder": 257,
+              "randomDrawOrder": 246,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3020210201,
+              "binDescription": "302-21-2"
+            },
+            {
+              "sampleOrder": 258,
+              "randomDrawOrder": 238,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3020310101,
+              "binDescription": "302-31-1"
+            },
+            {
+              "sampleOrder": 259,
+              "randomDrawOrder": 311,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3020510401,
+              "binDescription": "302-51-4"
+            },
+            {
+              "sampleOrder": 260,
+              "randomDrawOrder": 352,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3030010201,
+              "binDescription": "303-01-2"
+            },
+            {
+              "sampleOrder": 261,
+              "randomDrawOrder": 315,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3030290201,
+              "binDescription": "303-29-2"
+            },
+            {
+              "sampleOrder": 262,
+              "randomDrawOrder": 232,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3040510201,
+              "binDescription": "304-51-2"
+            },
+            {
+              "sampleOrder": 263,
+              "randomDrawOrder": 319,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3040510301,
+              "binDescription": "304-51-3"
+            },
+            {
+              "sampleOrder": 264,
+              "randomDrawOrder": 338,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3040610201,
+              "binDescription": "304-61-2"
+            },
+            {
+              "sampleOrder": 265,
+              "randomDrawOrder": 221,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3050090201,
+              "binDescription": "305-09-2"
+            },
+            {
+              "sampleOrder": 266,
+              "randomDrawOrder": 274,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3050390401,
+              "binDescription": "305-39-4"
+            },
+            {
+              "sampleOrder": 267,
+              "randomDrawOrder": 327,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3050410301,
+              "binDescription": "305-41-3"
+            },
+            {
+              "sampleOrder": 268,
+              "randomDrawOrder": 244,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3060010201,
+              "binDescription": "306-01-2"
+            },
+            {
+              "sampleOrder": 269,
+              "randomDrawOrder": 227,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3080310201,
+              "binDescription": "308-31-2"
+            },
+            {
+              "sampleOrder": 270,
+              "randomDrawOrder": 291,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3090210101,
+              "binDescription": "309-21-1"
+            },
+            {
+              "sampleOrder": 271,
+              "randomDrawOrder": 264,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3100190101,
+              "binDescription": "310-19-1"
+            },
+            {
+              "sampleOrder": 272,
+              "randomDrawOrder": 328,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3100210201,
+              "binDescription": "310-21-2"
+            },
+            {
+              "sampleOrder": 273,
+              "randomDrawOrder": 294,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3110070101,
+              "binDescription": "311-07-1"
+            },
+            {
+              "sampleOrder": 274,
+              "randomDrawOrder": 290,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3110080101,
+              "binDescription": "311-08-1"
+            },
+            {
+              "sampleOrder": 275,
+              "randomDrawOrder": 248,
+              "facility": "McKinnon",
+              "costCenter": 9081,
+              "binCode": 3110320101,
+              "binDescription": "311-32-1"
+            },
+            {
+              "sampleOrder": 283,
+              "randomDrawOrder": 261,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60200201,
+              "binDescription": "06-020-02"
+            },
+            {
+              "sampleOrder": 284,
+              "randomDrawOrder": 350,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60290301,
+              "binDescription": "06-029-03"
+            },
+            {
+              "sampleOrder": 285,
+              "randomDrawOrder": 224,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60310201,
+              "binDescription": "06-031-02"
+            },
+            {
+              "sampleOrder": 286,
+              "randomDrawOrder": 251,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60390401,
+              "binDescription": "06-039-04"
+            },
+            {
+              "sampleOrder": 287,
+              "randomDrawOrder": 268,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60400101,
+              "binDescription": "06-040-01"
+            },
+            {
+              "sampleOrder": 288,
+              "randomDrawOrder": 257,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60690101,
+              "binDescription": "06-069-01"
+            },
+            {
+              "sampleOrder": 289,
+              "randomDrawOrder": 245,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60700101,
+              "binDescription": "06-070-01"
+            },
+            {
+              "sampleOrder": 290,
+              "randomDrawOrder": 230,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60700301,
+              "binDescription": "06-070-03"
+            },
+            {
+              "sampleOrder": 291,
+              "randomDrawOrder": 297,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60800201,
+              "binDescription": "06-080-02"
+            },
+            {
+              "sampleOrder": 292,
+              "randomDrawOrder": 280,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60890101,
+              "binDescription": "06-089-01"
+            },
+            {
+              "sampleOrder": 293,
+              "randomDrawOrder": 346,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 60890301,
+              "binDescription": "06-089-03"
+            },
+            {
+              "sampleOrder": 294,
+              "randomDrawOrder": 334,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 61010201,
+              "binDescription": "06-101-02"
+            },
+            {
+              "sampleOrder": 295,
+              "randomDrawOrder": 333,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 61090301,
+              "binDescription": "06-109-03"
+            },
+            {
+              "sampleOrder": 296,
+              "randomDrawOrder": 305,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 61100201,
+              "binDescription": "06-110-02"
+            },
+            {
+              "sampleOrder": 297,
+              "randomDrawOrder": 252,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 61410201,
+              "binDescription": "06-141-02"
+            },
+            {
+              "sampleOrder": 298,
+              "randomDrawOrder": 288,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70030101,
+              "binDescription": "07-003-01"
+            },
+            {
+              "sampleOrder": 299,
+              "randomDrawOrder": 306,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70090201,
+              "binDescription": "07-009-02"
+            },
+            {
+              "sampleOrder": 300,
+              "randomDrawOrder": 325,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70270101,
+              "binDescription": "07-027-01"
+            },
+            {
+              "sampleOrder": 301,
+              "randomDrawOrder": 335,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70290101,
+              "binDescription": "07-029-01"
+            },
+            {
+              "sampleOrder": 302,
+              "randomDrawOrder": 332,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70380401,
+              "binDescription": "07-038-04"
+            },
+            {
+              "sampleOrder": 303,
+              "randomDrawOrder": 259,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70400401,
+              "binDescription": "07-040-04"
+            },
+            {
+              "sampleOrder": 304,
+              "randomDrawOrder": 339,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70600401,
+              "binDescription": "07-060-04"
+            },
+            {
+              "sampleOrder": 305,
+              "randomDrawOrder": 231,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 70680301,
+              "binDescription": "07-068-03"
+            },
+            {
+              "sampleOrder": 306,
+              "randomDrawOrder": 326,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80090301,
+              "binDescription": "08-009-03"
+            },
+            {
+              "sampleOrder": 307,
+              "randomDrawOrder": 317,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80100401,
+              "binDescription": "08-010-04"
+            },
+            {
+              "sampleOrder": 308,
+              "randomDrawOrder": 242,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80200101,
+              "binDescription": "08-020-01"
+            },
+            {
+              "sampleOrder": 309,
+              "randomDrawOrder": 351,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80280401,
+              "binDescription": "08-028-04"
+            },
+            {
+              "sampleOrder": 310,
+              "randomDrawOrder": 302,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80400301,
+              "binDescription": "08-040-03"
+            },
+            {
+              "sampleOrder": 311,
+              "randomDrawOrder": 309,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80490301,
+              "binDescription": "08-049-03"
+            },
+            {
+              "sampleOrder": 312,
+              "randomDrawOrder": 260,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80580401,
+              "binDescription": "08-058-04"
+            },
+            {
+              "sampleOrder": 313,
+              "randomDrawOrder": 296,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80680101,
+              "binDescription": "08-068-01"
+            },
+            {
+              "sampleOrder": 314,
+              "randomDrawOrder": 356,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 80800101,
+              "binDescription": "08-080-01"
+            },
+            {
+              "sampleOrder": 315,
+              "randomDrawOrder": 281,
+              "facility": "McKinnon",
+              "costCenter": 9111,
+              "binCode": 90590201,
+              "binDescription": "09-059-02"
+            },
+            {
+              "sampleOrder": 354,
+              "randomDrawOrder": 228,
+              "facility": "McKinnon",
+              "costCenter": 9113,
+              "binCode": 70180101,
+              "binDescription": "07-018-01"
+            },
+            {
+              "sampleOrder": 355,
+              "randomDrawOrder": 239,
+              "facility": "McKinnon",
+              "costCenter": 9113,
+              "binCode": 81010101,
+              "binDescription": "08-101-01"
+            },
+            {
+              "sampleOrder": 356,
+              "randomDrawOrder": 313,
+              "facility": "McKinnon",
+              "costCenter": 9115,
+              "binCode": 333333333,
+              "binDescription": "TRUCK 530632"
+            }
+          ]
+        }
+      },
+      "sourceFile": "temp-sample.xlsx"
+    }
+  ]
+}
