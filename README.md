@@ -10,6 +10,7 @@ A small GitHub Pages app for weekly IRDR counting on mobile devices.
 - Saves notes and progress in the browser with `localStorage`
 - Supports shared count coordination through the selected `Results` folder so one device can pause and another can resume
 - Saves results directly into a user-selected local folder on compatible Chromium/Android devices
+- Can hand the generated CSV to Android's native share sheet so the counter can send it to OneDrive or another installed app
 - Falls back to downloading the results CSV when direct folder save is unavailable
 - Supports install-style behavior with a web manifest and service worker
 
@@ -40,8 +41,9 @@ That command updates `data/samples.json` so the site uses the newest workbook da
 - Leaving the count screen pauses the shared claim, keeps the latest progress in the shared runtime state, and lets another counter resume or take over if needed.
 - If another device already has the count open, the app will show that status and ask before taking over the shared lock.
 - If that folder has been granted write access, tapping `Finish Count` will try to save the CSV directly there.
+- On devices that support file sharing from the browser, `Finish & Share` opens the native Android share sheet first so the counter can send the CSV to OneDrive.
 - If folder access is not supported or permission is unavailable, the app falls back to downloading the CSV.
-- You can also use `Save or Download Results` during the count if needed.
+- You can also use `Save or Download Results` for a local export or `Share Results` for a share-sheet snapshot during the count.
 - The app stores the chosen folder handle in IndexedDB when the browser allows it, but write permission may still need to be re-granted later.
 
 ## Publish To GitHub Pages

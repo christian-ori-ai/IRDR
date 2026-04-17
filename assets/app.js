@@ -16,6 +16,7 @@ const state = {
   activeFacility: "",
   currentIndex: 0,
   supportsFolderSave: false,
+  supportsFileShare: false,
   resultsDirectoryHandle: null,
   resultsDirectoryName: "",
   counterName: "",
@@ -60,6 +61,7 @@ const elements = {
   nextLocation: document.getElementById("next-location"),
   backToSetup: document.getElementById("back-to-setup"),
   exportResults: document.getElementById("export-results"),
+  shareResults: document.getElementById("share-results"),
   resetSession: document.getElementById("reset-session"),
   sessionNote: document.getElementById("session-note"),
 };
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   state.supportsFolderSave = supportsDirectorySave();
+  state.supportsFileShare = supportsFileShare();
   hydrateOperatorIdentity();
   registerServiceWorker();
   bindEvents();
@@ -116,6 +119,9 @@ function bindEvents() {
   });
   elements.exportResults.addEventListener("click", () => {
     void handleManualExport();
+  });
+  elements.shareResults.addEventListener("click", () => {
+    void handleManualShare();
   });
   elements.resetSession.addEventListener("click", () => {
     void resetSession();
@@ -367,8 +373,11 @@ function renderCountScreen() {
   elements.statusText.textContent = getStatusText(entry.varianceCount ?? 0);
   elements.minusButton.disabled = (entry.varianceCount ?? 0) <= 0;
   elements.previousLocation.disabled = state.currentIndex === 0;
+  elements.shareResults.hidden = !state.supportsFileShare;
   elements.nextLocation.textContent =
-    state.currentIndex === facility.locations.length - 1 ? "Finish Count" : "Next Location";
+    state.currentIndex === facility.locations.length - 1
+      ? (state.supportsFileShare ? "Finish & Share" : "Finish Count")
+      : "Next Location";
 }
 
 function adjustVariance(delta) {
@@ -443,6 +452,7 @@ async function moveLocation(direction) {
       preferFolder: true,
       interactive: Boolean(state.resultsDirectoryHandle),
       markComplete: true,
+      share: state.supportsFileShare,
     });
     setActiveScreen("setup");
     await refreshSelectionSummary();
@@ -466,6 +476,18 @@ async function handleManualExport() {
   }
 }
 
+async function handleManualShare() {
+  const outcome = await exportResults({
+    preferFolder: true,
+    interactive: false,
+    markComplete: false,
+    share: true,
+  });
+  if (outcome) {
+    window.alert(buildExportMessage(outcome, false));
+  }
+}
+
 async function exportResults(options = {}) {
   const week = getActiveWeek();
   const facility = getActiveFacility();
@@ -475,6 +497,7 @@ async function exportResults(options = {}) {
 
   const exportData = buildResultsExport(week, facility);
   const shouldPreferFolder = options.preferFolder !== false;
+  const shareOutcome = options.share ? await shareExportData(exportData) : { status: "not-requested" };
 
   if (shouldPreferFolder) {
     const saveOutcome = await saveResultsToDirectory(exportData, options.interactive === true);
@@ -482,7 +505,7 @@ async function exportResults(options = {}) {
       if (options.markComplete) {
         await markCountCompleted(week, facility, saveOutcome.filename);
       }
-      return saveOutcome;
+      return { ...saveOutcome, shareStatus: shareOutcome.status };
     }
   }
 
@@ -491,6 +514,7 @@ async function exportResults(options = {}) {
     method: "download",
     filename: exportData.filename,
     reason: state.supportsFolderSave ? "download-fallback" : "unsupported",
+    shareStatus: shareOutcome.status,
   };
   if (options.markComplete) {
     await markCountCompleted(week, facility, outcome.filename);
@@ -1169,7 +1193,9 @@ function updateResultsFolderUI(overrideMessage = "") {
     elements.chooseResultsFolder.disabled = true;
     elements.clearResultsFolder.disabled = true;
     elements.sessionNote.innerHTML =
-      "Tapping <strong>Finish Count</strong> on the last location will download the results CSV to the device.";
+      state.supportsFileShare
+        ? "Tapping <strong>Finish &amp; Share</strong> on the last location will open the device share sheet and then download the results CSV to the device."
+        : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV to the device.";
     return;
   }
 
@@ -1186,8 +1212,12 @@ function updateResultsFolderUI(overrideMessage = "") {
   elements.chooseResultsFolder.disabled = false;
   elements.clearResultsFolder.disabled = !state.resultsDirectoryHandle;
   elements.sessionNote.innerHTML = state.resultsDirectoryHandle
-    ? "Leaving the count screen pauses your shared claim, keeps the latest progress available to resume, and <strong>Finish Count</strong> will try to save straight into the selected results folder."
-    : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.";
+    ? (state.supportsFileShare
+      ? "Leaving the count screen pauses your shared claim, keeps the latest progress available to resume, and <strong>Finish &amp; Share</strong> will open the device share sheet before saving straight into the selected results folder."
+      : "Leaving the count screen pauses your shared claim, keeps the latest progress available to resume, and <strong>Finish Count</strong> will try to save straight into the selected results folder.")
+    : (state.supportsFileShare
+      ? "Leaving the count screen pauses your shared claim, keeps the latest progress available to resume, and <strong>Finish &amp; Share</strong> will open the device share sheet before downloading the CSV unless a results folder has been selected."
+      : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.");
 }
 
 async function resetSession() {
@@ -1313,15 +1343,77 @@ function buildExportMessage(outcome, isComplete) {
     return `${prefix}The results could not be exported.`;
   }
 
+  const shareMessage = buildShareMessage(outcome.shareStatus);
+
   if (outcome.method === "folder") {
-    return `${prefix}Results were saved to ${outcome.folderName}/${outcome.filename}.`;
+    return `${prefix}Results were saved to ${outcome.folderName}/${outcome.filename}.${shareMessage}`;
   }
 
   if (state.supportsFolderSave && !state.resultsDirectoryHandle) {
-    return `${prefix}Results were downloaded as ${outcome.filename}. Choose the local IRDR/Results folder on the setup screen if you want direct save next time.`;
+    return `${prefix}Results were downloaded as ${outcome.filename}. Choose the local IRDR/Results folder on the setup screen if you want direct save next time.${shareMessage}`;
   }
 
-  return `${prefix}Results were downloaded as ${outcome.filename}.`;
+  return `${prefix}Results were downloaded as ${outcome.filename}.${shareMessage}`;
+}
+
+function buildShareMessage(shareStatus) {
+  if (shareStatus === "shared") {
+    return " The file was also shared from the device.";
+  }
+
+  if (shareStatus === "cancelled") {
+    return " Sharing was canceled, but the export was still saved.";
+  }
+
+  if (shareStatus === "failed") {
+    return " The device could not open the share sheet, but the export was still saved.";
+  }
+
+  return "";
+}
+
+async function shareExportData(exportData) {
+  if (!state.supportsFileShare) {
+    return { status: "unsupported" };
+  }
+
+  const payload = buildSharePayload(exportData);
+  if (!payload) {
+    return { status: "unsupported" };
+  }
+
+  try {
+    await navigator.share(payload);
+    return { status: "shared" };
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      return { status: "cancelled" };
+    }
+    console.warn("Unable to open the device share sheet", error);
+    return { status: "failed" };
+  }
+}
+
+function buildSharePayload(exportData) {
+  if (!state.supportsFileShare || typeof File !== "function") {
+    return null;
+  }
+
+  const shareFile = new File([exportData.csvContent], exportData.filename, {
+    type: "text/csv;charset=utf-8",
+  });
+  const payload = {
+    files: [shareFile],
+    title: `IRDR Results • ${state.activeFacility}`,
+    text: `IRDR results for ${state.activeFacility} (${getActiveWeek()?.label ?? ""})`,
+  };
+
+  try {
+    return navigator.canShare?.(payload) ? payload : null;
+  } catch (error) {
+    console.warn("The device cannot share the generated CSV payload", error);
+    return null;
+  }
 }
 
 function downloadCsv(filename, csvContent) {
@@ -1365,6 +1457,13 @@ function generateDeviceId() {
 
 function supportsDirectorySave() {
   return window.isSecureContext && "showDirectoryPicker" in window && "indexedDB" in window;
+}
+
+function supportsFileShare() {
+  return window.isSecureContext
+    && typeof navigator.share === "function"
+    && typeof navigator.canShare === "function"
+    && typeof File === "function";
 }
 
 function openSettingsDb() {
