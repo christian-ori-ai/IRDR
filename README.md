@@ -8,7 +8,8 @@ A small GitHub Pages app for weekly IRDR counting on mobile devices.
 - Shows count locations in a flashcard-style mobile workflow
 - Tracks cases incorrect or missing with `+` and `-`
 - Saves notes and progress in the browser with `localStorage`
-- Exports the entered results to CSV from the phone
+- Saves results directly into a user-selected local folder on compatible Chromium/Android devices
+- Falls back to downloading the results CSV when direct folder save is unavailable
 - Supports install-style behavior with a web manifest and service worker
 
 ## Files
@@ -17,6 +18,7 @@ A small GitHub Pages app for weekly IRDR counting on mobile devices.
 - `assets/styles.css`: mobile-first styling
 - `assets/app.js`: app logic and local progress handling
 - `data/samples.json`: week and facility sample data used by the app
+- `Results/`: place exported count-result CSV files here after they are collected from phones
 - `scripts/export_irdr_sample.py`: converts an IRDR workbook into `samples.json`
 
 ## Update The Weekly Sample
@@ -28,6 +30,15 @@ python scripts/export_irdr_sample.py "..\IRDR Sample 2026-04-16 Excluding 9300 9
 ```
 
 That command updates `data/samples.json` so the site uses the newest workbook data.
+
+## Count Results
+
+- While a count is in progress, results are stored on the device in the browser.
+- On compatible Chromium browsers, the user can tap `Choose Results Folder` and select the device's local `IRDR/Results` folder.
+- If that folder has been granted write access, tapping `Finish Count` will try to save the CSV directly there.
+- If folder access is not supported or permission is unavailable, the app falls back to downloading the CSV.
+- You can also use `Save or Download Results` during the count if needed.
+- The app stores the chosen folder handle in IndexedDB when the browser allows it, but write permission may still need to be re-granted later.
 
 ## Publish To GitHub Pages
 

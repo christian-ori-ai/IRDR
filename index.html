@@ -68,6 +68,18 @@
             <p id="summary-note" class="selection-summary__note"></p>
           </div>
 
+          <div class="results-note">
+            <p class="results-note__title">Results Destination</p>
+            <p id="results-folder-status" class="results-note__body">Checking folder-save support on this device...</p>
+            <div class="results-actions">
+              <button id="choose-results-folder" class="button button--secondary" type="button">Choose Results Folder</button>
+              <button id="clear-results-folder" class="button button--ghost" type="button">Forget Folder</button>
+            </div>
+            <p class="results-note__foot">
+              On compatible Chromium browsers, pick the local <code>IRDR/Results</code> folder once and the app will try to save results there directly. If that is unavailable, the app falls back to downloading the CSV.
+            </p>
+          </div>
+
           <div class="panel__actions">
             <button id="start-count" class="button button--primary" disabled>Start Count</button>
           </div>
@@ -138,9 +150,13 @@
           </div>
 
           <div class="session-tools">
-            <button id="export-results" class="button button--ghost" type="button">Export CSV</button>
+            <button id="export-results" class="button button--ghost" type="button">Save or Download Results</button>
             <button id="reset-session" class="button button--ghost" type="button">Reset Progress</button>
           </div>
+
+          <p id="session-note" class="session-note">
+            Tapping <strong>Finish Count</strong> on the last location will save to the selected results folder when possible, otherwise the results CSV will download to the device.
+          </p>
         </div>
       </section>
     </main>

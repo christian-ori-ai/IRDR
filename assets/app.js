@@ -1,8 +1,15 @@
+const SETTINGS_DB_NAME = "irdr-mobile";
+const SETTINGS_STORE_NAME = "settings";
+const RESULTS_DIRECTORY_KEY = "results-directory-handle";
+
 const state = {
   weeks: [],
   activeWeekId: "",
   activeFacility: "",
   currentIndex: 0,
+  supportsFolderSave: false,
+  resultsDirectoryHandle: null,
+  resultsDirectoryName: "",
 };
 
 const elements = {
@@ -16,6 +23,9 @@ const elements = {
   summaryCompleted: document.getElementById("summary-completed"),
   summaryVariance: document.getElementById("summary-variance"),
   summaryNote: document.getElementById("summary-note"),
+  resultsFolderStatus: document.getElementById("results-folder-status"),
+  chooseResultsFolder: document.getElementById("choose-results-folder"),
+  clearResultsFolder: document.getElementById("clear-results-folder"),
   activeWeek: document.getElementById("active-week"),
   activeFacility: document.getElementById("active-facility"),
   progressLabel: document.getElementById("progress-label"),
@@ -35,13 +45,16 @@ const elements = {
   backToSetup: document.getElementById("back-to-setup"),
   exportResults: document.getElementById("export-results"),
   resetSession: document.getElementById("reset-session"),
+  sessionNote: document.getElementById("session-note"),
 };
 
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
+  state.supportsFolderSave = supportsDirectorySave();
   registerServiceWorker();
   bindEvents();
+  await hydrateResultsDirectory();
 
   try {
     const response = await fetch("data/samples.json", { cache: "no-store" });
@@ -68,10 +81,41 @@ function bindEvents() {
   elements.minusButton.addEventListener("click", () => adjustVariance(-1));
   elements.plusButton.addEventListener("click", () => adjustVariance(1));
   elements.notesInput.addEventListener("input", () => saveCurrentEntry(true));
-  elements.previousLocation.addEventListener("click", () => moveLocation(-1));
-  elements.nextLocation.addEventListener("click", () => moveLocation(1));
-  elements.exportResults.addEventListener("click", exportResults);
+  elements.previousLocation.addEventListener("click", () => {
+    void moveLocation(-1);
+  });
+  elements.nextLocation.addEventListener("click", () => {
+    void moveLocation(1);
+  });
+  elements.exportResults.addEventListener("click", () => {
+    void handleManualExport();
+  });
   elements.resetSession.addEventListener("click", resetSession);
+  elements.chooseResultsFolder.addEventListener("click", () => {
+    void chooseResultsFolder();
+  });
+  elements.clearResultsFolder.addEventListener("click", () => {
+    void clearResultsFolder();
+  });
+}
+
+async function hydrateResultsDirectory() {
+  if (!state.supportsFolderSave) {
+    updateResultsFolderUI();
+    return;
+  }
+
+  try {
+    const storedHandle = await settingsGet(RESULTS_DIRECTORY_KEY);
+    if (storedHandle) {
+      state.resultsDirectoryHandle = storedHandle;
+      state.resultsDirectoryName = storedHandle.name ?? "";
+    }
+  } catch (error) {
+    console.warn("Unable to restore results directory handle", error);
+  }
+
+  updateResultsFolderUI();
 }
 
 function populateWeekSelect() {
@@ -240,40 +284,109 @@ function saveCurrentEntry(markReviewed = false) {
   renderFacilityOptions();
 }
 
-function moveLocation(direction) {
+async function moveLocation(direction) {
   saveCurrentEntry(true);
 
-  const facility = getActiveFacility();
-  if (!facility) {
-    return;
-  }
-
-  state.currentIndex = clamp(state.currentIndex + direction, 0, facility.locations.length - 1);
-  const week = getActiveWeek();
-  const session = loadSession(week.id, state.activeFacility);
-  session.currentIndex = state.currentIndex;
-  saveSession(week.id, state.activeFacility, session);
-  renderCountScreen();
-}
-
-function exportResults() {
   const week = getActiveWeek();
   const facility = getActiveFacility();
   if (!week || !facility) {
     return;
   }
 
+  if (direction > 0 && state.currentIndex === facility.locations.length - 1) {
+    const outcome = await exportResults({
+      preferFolder: true,
+      interactive: Boolean(state.resultsDirectoryHandle),
+    });
+    setActiveScreen("setup");
+    updateSelectionSummary();
+    renderFacilityOptions();
+    window.alert(buildExportMessage(outcome, true));
+    return;
+  }
+
+  state.currentIndex = clamp(state.currentIndex + direction, 0, facility.locations.length - 1);
   const session = loadSession(week.id, state.activeFacility);
+  session.currentIndex = state.currentIndex;
+  saveSession(week.id, state.activeFacility, session);
+  renderCountScreen();
+}
+
+async function handleManualExport() {
+  const outcome = await exportResults({ preferFolder: true, interactive: true });
+  if (outcome) {
+    window.alert(buildExportMessage(outcome, false));
+  }
+}
+
+async function exportResults(options = {}) {
+  const week = getActiveWeek();
+  const facility = getActiveFacility();
+  if (!week || !facility) {
+    return null;
+  }
+
+  const exportData = buildResultsExport(week, facility);
+  const shouldPreferFolder = options.preferFolder !== false;
+
+  if (shouldPreferFolder) {
+    const saveOutcome = await saveResultsToDirectory(exportData, options.interactive === true);
+    if (saveOutcome) {
+      return saveOutcome;
+    }
+  }
+
+  downloadCsv(exportData.filename, exportData.csvContent);
+  return {
+    method: "download",
+    filename: exportData.filename,
+    reason: state.supportsFolderSave ? "download-fallback" : "unsupported",
+  };
+}
+
+function buildResultsExport(week, facility) {
+  const session = loadSession(week.id, state.activeFacility);
+  const progress = getSessionProgress(week.id, state.activeFacility, facility.locations);
+  const exportedAt = new Date().toISOString();
+  const filename = buildResultsFileName(week.id, state.activeFacility, exportedAt);
   const lines = [
-    ["week", "facility", "sample_order", "cost_center", "bin_code", "bin_description", "reviewed", "variance_count", "notes"],
+    [
+      "company",
+      "week",
+      "facility",
+      "source_file",
+      "exported_at",
+      "facility_population",
+      "sample_size",
+      "completed_locations",
+      "defect_locations",
+      "total_variance_cases",
+      "sample_order",
+      "random_draw_order",
+      "cost_center",
+      "bin_code",
+      "bin_description",
+      "reviewed",
+      "variance_count",
+      "notes",
+    ],
   ];
 
   facility.locations.forEach((location) => {
     const entry = session.entries[String(location.sampleOrder)] ?? { varianceCount: 0, notes: "" };
     lines.push([
+      week.company ?? "",
       week.id,
       state.activeFacility,
+      week.sourceFile ?? "",
+      exportedAt,
+      facility.population ?? "",
+      facility.sampleSize ?? "",
+      progress.completed,
+      progress.defectLocations,
+      progress.totalVariance,
       location.sampleOrder,
+      location.randomDrawOrder ?? "",
       location.costCenter,
       location.binCode,
       location.binDescription ?? "",
@@ -283,14 +396,172 @@ function exportResults() {
     ]);
   });
 
-  const csvContent = lines.map((row) => row.map(csvEscape).join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = `irdr-${week.id}-${state.activeFacility.toLowerCase()}.csv`;
-  anchor.click();
-  URL.revokeObjectURL(url);
+  return {
+    filename,
+    csvContent: lines.map((row) => row.map(csvEscape).join(",")).join("\n"),
+  };
+}
+
+async function saveResultsToDirectory(exportData, interactive) {
+  const directoryHandle = await getResultsDirectoryHandle({ interactive });
+  if (!directoryHandle) {
+    return null;
+  }
+
+  try {
+    const fileHandle = await directoryHandle.getFileHandle(exportData.filename, { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(exportData.csvContent);
+    await writable.close();
+
+    return {
+      method: "folder",
+      filename: exportData.filename,
+      folderName: directoryHandle.name ?? "Results",
+      reason: "saved-to-folder",
+    };
+  } catch (error) {
+    console.warn("Unable to save results directly to the selected directory", error);
+    updateResultsFolderUI(
+      "The selected folder could not be written to just now. The app will fall back to a normal download until access is restored.",
+    );
+    return null;
+  }
+}
+
+async function getResultsDirectoryHandle({ interactive = false } = {}) {
+  if (!state.supportsFolderSave) {
+    return null;
+  }
+
+  let directoryHandle = state.resultsDirectoryHandle;
+
+  if (!directoryHandle) {
+    if (!interactive) {
+      return null;
+    }
+
+    try {
+      directoryHandle = await window.showDirectoryPicker({ id: "irdr-results", mode: "readwrite" });
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        console.warn("Results folder selection failed", error);
+      }
+      return null;
+    }
+
+    state.resultsDirectoryHandle = directoryHandle;
+    state.resultsDirectoryName = directoryHandle.name ?? "";
+
+    try {
+      await settingsSet(RESULTS_DIRECTORY_KEY, directoryHandle);
+    } catch (error) {
+      console.warn("Unable to persist results directory handle", error);
+    }
+  }
+
+  const permissionGranted = await verifyDirectoryPermission(directoryHandle, interactive);
+  if (!permissionGranted) {
+    updateResultsFolderUI(
+      interactive
+        ? "The device did not grant write access to that folder. Results will download instead until access is allowed."
+        : "",
+    );
+    return null;
+  }
+
+  state.resultsDirectoryHandle = directoryHandle;
+  state.resultsDirectoryName = directoryHandle.name ?? "";
+  updateResultsFolderUI();
+  return directoryHandle;
+}
+
+async function chooseResultsFolder() {
+  if (!state.supportsFolderSave) {
+    updateResultsFolderUI();
+    return;
+  }
+
+  const directoryHandle = await getResultsDirectoryHandle({ interactive: true });
+  if (!directoryHandle) {
+    updateResultsFolderUI();
+    return;
+  }
+
+  updateResultsFolderUI(
+    `Direct save is ready for folder "${directoryHandle.name}". Finish Count will try to write the results CSV there.`,
+  );
+}
+
+async function clearResultsFolder() {
+  state.resultsDirectoryHandle = null;
+  state.resultsDirectoryName = "";
+
+  try {
+    await settingsDelete(RESULTS_DIRECTORY_KEY);
+  } catch (error) {
+    console.warn("Unable to clear saved results directory handle", error);
+  }
+
+  updateResultsFolderUI();
+}
+
+async function verifyDirectoryPermission(directoryHandle, askForPermission) {
+  if (!directoryHandle) {
+    return false;
+  }
+
+  const options = { mode: "readwrite" };
+
+  try {
+    if (typeof directoryHandle.queryPermission === "function") {
+      const query = await directoryHandle.queryPermission(options);
+      if (query === "granted") {
+        return true;
+      }
+    }
+
+    if (!askForPermission) {
+      return false;
+    }
+
+    if (typeof directoryHandle.requestPermission === "function") {
+      const request = await directoryHandle.requestPermission(options);
+      return request === "granted";
+    }
+  } catch (error) {
+    console.warn("Directory permission check failed", error);
+  }
+
+  return false;
+}
+
+function updateResultsFolderUI(overrideMessage = "") {
+  if (!state.supportsFolderSave) {
+    elements.resultsFolderStatus.textContent =
+      "This browser does not expose direct folder save here. Results will download to the device instead.";
+    elements.chooseResultsFolder.disabled = true;
+    elements.clearResultsFolder.disabled = true;
+    elements.sessionNote.innerHTML =
+      "Tapping <strong>Finish Count</strong> on the last location will download the results CSV to the device.";
+    return;
+  }
+
+  if (overrideMessage) {
+    elements.resultsFolderStatus.textContent = overrideMessage;
+  } else if (state.resultsDirectoryHandle) {
+    elements.resultsFolderStatus.textContent =
+      `Direct save is configured for folder "${state.resultsDirectoryName || "Results"}".`;
+  } else {
+    elements.resultsFolderStatus.textContent =
+      "No results folder is selected yet. Choose the device's local IRDR/Results folder to save files there directly.";
+  }
+
+  elements.chooseResultsFolder.disabled = false;
+  elements.clearResultsFolder.disabled = !state.resultsDirectoryHandle;
+  elements.sessionNote.innerHTML = state.resultsDirectoryHandle
+    ? "Tapping <strong>Finish Count</strong> on the last location will try to save straight into the selected results folder. If that fails, the CSV will download to the device."
+    : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.";
 }
 
 function resetSession() {
@@ -383,13 +654,103 @@ function getStatusText(varianceCount) {
   return "No variance recorded for this location.";
 }
 
+function buildExportMessage(outcome, isComplete) {
+  const prefix = isComplete ? "Count complete. " : "";
+  if (!outcome) {
+    return `${prefix}The results could not be exported.`;
+  }
+
+  if (outcome.method === "folder") {
+    return `${prefix}Results were saved to ${outcome.folderName}/${outcome.filename}.`;
+  }
+
+  if (state.supportsFolderSave && !state.resultsDirectoryHandle) {
+    return `${prefix}Results were downloaded as ${outcome.filename}. Choose the local IRDR/Results folder on the setup screen if you want direct save next time.`;
+  }
+
+  return `${prefix}Results were downloaded as ${outcome.filename}.`;
+}
+
+function downloadCsv(filename, csvContent) {
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 function csvEscape(value) {
   const text = String(value ?? "");
   return `"${text.replace(/"/g, '""')}"`;
 }
 
+function buildResultsFileName(weekId, facilityName, exportedAt) {
+  const safeFacility = String(facilityName ?? "facility")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  const stamp = String(exportedAt ?? "")
+    .replace(/[:]/g, "")
+    .replace(/\.\d+Z$/, "Z");
+  return `irdr-results-${weekId}-${safeFacility}-${stamp}.csv`;
+}
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function supportsDirectorySave() {
+  return window.isSecureContext && "showDirectoryPicker" in window && "indexedDB" in window;
+}
+
+function openSettingsDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(SETTINGS_DB_NAME, 1);
+
+    request.addEventListener("upgradeneeded", () => {
+      request.result.createObjectStore(SETTINGS_STORE_NAME);
+    });
+    request.addEventListener("success", () => resolve(request.result));
+    request.addEventListener("error", () => reject(request.error));
+  });
+}
+
+async function settingsGet(key) {
+  const db = await openSettingsDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(SETTINGS_STORE_NAME, "readonly");
+    const store = transaction.objectStore(SETTINGS_STORE_NAME);
+    const request = store.get(key);
+    request.addEventListener("success", () => resolve(request.result));
+    request.addEventListener("error", () => reject(request.error));
+  });
+}
+
+async function settingsSet(key, value) {
+  const db = await openSettingsDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(SETTINGS_STORE_NAME, "readwrite");
+    const store = transaction.objectStore(SETTINGS_STORE_NAME);
+    store.put(value, key);
+    transaction.addEventListener("complete", () => resolve());
+    transaction.addEventListener("error", () => reject(transaction.error));
+    transaction.addEventListener("abort", () => reject(transaction.error));
+  });
+}
+
+async function settingsDelete(key) {
+  const db = await openSettingsDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(SETTINGS_STORE_NAME, "readwrite");
+    const store = transaction.objectStore(SETTINGS_STORE_NAME);
+    store.delete(key);
+    transaction.addEventListener("complete", () => resolve());
+    transaction.addEventListener("error", () => reject(transaction.error));
+    transaction.addEventListener("abort", () => reject(transaction.error));
+  });
 }
 
 function registerServiceWorker() {
