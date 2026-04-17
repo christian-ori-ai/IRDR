@@ -9,7 +9,6 @@ Place exported IRDR results files in this folder.
 3. When the counter taps `Finish Count` or `Finish & Share`, the app tries to write the CSV directly here.
 4. On share-capable Android browsers, the app can also open the native share sheet so the same CSV can be sent to OneDrive or another installed app.
 5. If folder save is unavailable or permission is denied, the app falls back to downloading the CSV instead.
-6. While a shared count is active, the app may also create coordination files under `Results/.irdr-runtime/` so another device can see whether the count is available, paused, in progress, or completed.
 
 ## File Format
 
@@ -29,5 +28,3 @@ Each results CSV includes:
 - exporting counter name and last-updated details for traceability
 
 The direct-save path depends on the device browser supporting the File System Access API and the user granting write permission to this folder.
-
-Avoid deleting the `.irdr-runtime` folder while counts are in progress, since that folder is what the app uses to coordinate shared pause/resume behavior between devices.

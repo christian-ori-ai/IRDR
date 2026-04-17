@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>IRDR Mobile Count</title>
-  <link rel="manifest" href="manifest.webmanifest?v=20260417d">
-  <link rel="icon" href="assets/icon-192.svg?v=20260417d" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/styles.css?v=20260417d">
+  <link rel="manifest" href="manifest.webmanifest?v=20260417e">
+  <link rel="icon" href="assets/icon-192.svg?v=20260417e" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=20260417e">
 </head>
 <body>
   <div class="background-glow" aria-hidden="true"></div>
@@ -90,7 +90,7 @@
               <button id="clear-results-folder" class="button button--ghost" type="button">Forget Folder</button>
             </div>
             <p class="results-note__foot">
-              On compatible Chromium browsers, pick the local <code>IRDR/Results</code> folder once to turn on shared coordination and direct-save results. If that is unavailable, the app falls back to downloading the CSV.
+              On compatible Chromium browsers, pick the local <code>IRDR/Results</code> folder if you want results saved there directly. If that is unavailable, the app falls back to sharing or downloading the CSV.
             </p>
           </div>
 
@@ -103,7 +103,7 @@
       <section id="count-screen" class="screen" aria-live="polite">
         <div class="panel panel--count">
           <div class="count-topbar">
-            <button id="back-to-setup" class="button button--ghost" type="button">Pause Count</button>
+            <button id="back-to-setup" class="button button--ghost" type="button">Back</button>
             <div class="count-topbar__meta">
               <span id="active-week" class="pill"></span>
               <span id="active-facility" class="pill pill--solid"></span>
@@ -170,14 +170,14 @@
           </div>
 
           <p id="session-note" class="session-note">
-            Leaving the count screen pauses the shared claim and keeps the latest progress ready to resume later.
+            Progress stays on this device/browser and will still be here when you come back later.
           </p>
         </div>
       </section>
     </main>
   </div>
 
-  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417d" alt="" aria-hidden="true">
+  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417e" alt="" aria-hidden="true">
 
   <template id="facility-option-template">
     <button class="facility-card" type="button">
@@ -186,6 +186,6 @@
     </button>
   </template>
 
-  <script src="assets/app.js?v=20260417d" type="module"></script>
+  <script src="assets/app.js?v=20260417e" type="module"></script>
 </body>
 </html>
