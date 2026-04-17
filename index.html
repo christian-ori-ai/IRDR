@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>IRDR Mobile Count</title>
-  <link rel="manifest" href="manifest.webmanifest?v=20260417b">
-  <link rel="icon" href="assets/icon-192.svg?v=20260417b" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/styles.css?v=20260417b">
+  <link rel="manifest" href="manifest.webmanifest?v=20260417c">
+  <link rel="icon" href="assets/icon-192.svg?v=20260417c" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=20260417c">
 </head>
 <body>
   <div class="background-glow" aria-hidden="true"></div>
@@ -45,6 +45,17 @@
               </select>
             </label>
 
+            <label class="field">
+              <span class="field__label">Counter</span>
+              <input
+                id="counter-name"
+                class="field__control"
+                type="text"
+                autocomplete="name"
+                placeholder="Enter your name or badge name"
+              >
+            </label>
+
             <div class="field">
               <span class="field__label">Facility</span>
               <div id="facility-options" class="facility-options"></div>
@@ -68,6 +79,7 @@
               </div>
             </div>
             <p id="summary-note" class="selection-summary__note"></p>
+            <p id="shared-status" class="selection-summary__shared"></p>
           </div>
 
           <div class="results-note">
@@ -78,7 +90,7 @@
               <button id="clear-results-folder" class="button button--ghost" type="button">Forget Folder</button>
             </div>
             <p class="results-note__foot">
-              On compatible Chromium browsers, pick the local <code>IRDR/Results</code> folder once and the app will try to save results there directly. If that is unavailable, the app falls back to downloading the CSV.
+              On compatible Chromium browsers, pick the local <code>IRDR/Results</code> folder once to turn on shared coordination and direct-save results. If that is unavailable, the app falls back to downloading the CSV.
             </p>
           </div>
 
@@ -91,7 +103,7 @@
       <section id="count-screen" class="screen" aria-live="polite">
         <div class="panel panel--count">
           <div class="count-topbar">
-            <button id="back-to-setup" class="button button--ghost" type="button">Back</button>
+            <button id="back-to-setup" class="button button--ghost" type="button">Pause Count</button>
             <div class="count-topbar__meta">
               <span id="active-week" class="pill"></span>
               <span id="active-facility" class="pill pill--solid"></span>
@@ -157,14 +169,14 @@
           </div>
 
           <p id="session-note" class="session-note">
-            Tapping <strong>Finish Count</strong> on the last location will save to the selected results folder when possible, otherwise the results CSV will download to the device.
+            Leaving the count screen pauses the shared claim and keeps the latest progress ready to resume later.
           </p>
         </div>
       </section>
     </main>
   </div>
 
-  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417b" alt="" aria-hidden="true">
+  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417c" alt="" aria-hidden="true">
 
   <template id="facility-option-template">
     <button class="facility-card" type="button">
@@ -173,6 +185,6 @@
     </button>
   </template>
 
-  <script src="assets/app.js?v=20260417b" type="module"></script>
+  <script src="assets/app.js?v=20260417c" type="module"></script>
 </body>
 </html>

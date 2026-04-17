@@ -288,6 +288,13 @@ code {
   min-height: 1.25rem;
 }
 
+.selection-summary__shared {
+  margin: 10px 0 0;
+  min-height: 1.3rem;
+  color: #d6e0ff;
+  font-size: 0.94rem;
+}
+
 .results-note,
 .session-note {
   margin-top: 18px;

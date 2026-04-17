@@ -8,6 +8,7 @@ Place exported IRDR results files in this folder.
 2. The user selects this local `Results` folder from the device filesystem.
 3. When the counter taps `Finish Count`, the app tries to write the CSV directly here.
 4. If folder save is unavailable or permission is denied, the app falls back to downloading the CSV instead.
+5. While a shared count is active, the app may also create coordination files under `Results/.irdr-runtime/` so another device can see whether the count is available, paused, in progress, or completed.
 
 ## File Format
 
@@ -24,5 +25,8 @@ Each results CSV includes:
 - defect locations
 - total variance cases
 - per-location count results and notes
+- exporting counter name and last-updated details for traceability
 
 The direct-save path depends on the device browser supporting the File System Access API and the user granting write permission to this folder.
+
+Avoid deleting the `.irdr-runtime` folder while counts are in progress, since that folder is what the app uses to coordinate shared pause/resume behavior between devices.

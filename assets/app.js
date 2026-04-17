@@ -1,6 +1,14 @@
 const SETTINGS_DB_NAME = "irdr-mobile";
 const SETTINGS_STORE_NAME = "settings";
 const RESULTS_DIRECTORY_KEY = "results-directory-handle";
+const COUNTER_NAME_KEY = "irdr-counter-name";
+const DEVICE_ID_KEY = "irdr-device-id";
+const CLAIM_LEASE_MS = 15 * 60 * 1000;
+const HEARTBEAT_INTERVAL_MS = 60 * 1000;
+const RUNTIME_DIR_NAME = ".irdr-runtime";
+const CLAIMS_DIR_NAME = "claims";
+const SESSIONS_DIR_NAME = "sessions";
+const STATUS_DIR_NAME = "status";
 
 const state = {
   weeks: [],
@@ -10,6 +18,12 @@ const state = {
   supportsFolderSave: false,
   resultsDirectoryHandle: null,
   resultsDirectoryName: "",
+  counterName: "",
+  deviceId: "",
+  sharedStatus: null,
+  activeClaimKey: "",
+  activeClaimContext: null,
+  heartbeatId: null,
 };
 
 const elements = {
@@ -19,10 +33,12 @@ const elements = {
   facilityOptions: document.getElementById("facility-options"),
   facilityOptionTemplate: document.getElementById("facility-option-template"),
   startCount: document.getElementById("start-count"),
+  counterName: document.getElementById("counter-name"),
   summaryLocations: document.getElementById("summary-locations"),
   summaryCompleted: document.getElementById("summary-completed"),
   summaryVariance: document.getElementById("summary-variance"),
   summaryNote: document.getElementById("summary-note"),
+  sharedStatus: document.getElementById("shared-status"),
   resultsFolderStatus: document.getElementById("results-folder-status"),
   chooseResultsFolder: document.getElementById("choose-results-folder"),
   clearResultsFolder: document.getElementById("clear-results-folder"),
@@ -52,6 +68,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   state.supportsFolderSave = supportsDirectorySave();
+  hydrateOperatorIdentity();
   registerServiceWorker();
   bindEvents();
   await hydrateResultsDirectory();
@@ -73,11 +90,21 @@ function bindEvents() {
     state.activeWeekId = elements.weekSelect.value;
     state.activeFacility = "";
     renderFacilityOptions();
-    updateSelectionSummary();
+    void refreshSelectionSummary();
   });
 
-  elements.startCount.addEventListener("click", startCountSession);
-  elements.backToSetup.addEventListener("click", () => setActiveScreen("setup"));
+  elements.counterName.addEventListener("input", () => {
+    state.counterName = elements.counterName.value.trim();
+    localStorage.setItem(COUNTER_NAME_KEY, elements.counterName.value);
+    void refreshSelectionSummary();
+  });
+
+  elements.startCount.addEventListener("click", () => {
+    void startCountSession();
+  });
+  elements.backToSetup.addEventListener("click", () => {
+    void pauseCountSession({ returnToSetup: true });
+  });
   elements.minusButton.addEventListener("click", () => adjustVariance(-1));
   elements.plusButton.addEventListener("click", () => adjustVariance(1));
   elements.notesInput.addEventListener("input", () => saveCurrentEntry(true));
@@ -90,13 +117,35 @@ function bindEvents() {
   elements.exportResults.addEventListener("click", () => {
     void handleManualExport();
   });
-  elements.resetSession.addEventListener("click", resetSession);
+  elements.resetSession.addEventListener("click", () => {
+    void resetSession();
+  });
   elements.chooseResultsFolder.addEventListener("click", () => {
     void chooseResultsFolder();
   });
   elements.clearResultsFolder.addEventListener("click", () => {
     void clearResultsFolder();
   });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      void pauseCountSession({ returnToSetup: true });
+      return;
+    }
+
+    void refreshSelectionSummary();
+    void pulseHeartbeat();
+  });
+}
+
+function hydrateOperatorIdentity() {
+  const storedName = localStorage.getItem(COUNTER_NAME_KEY) ?? "";
+  const storedDeviceId = localStorage.getItem(DEVICE_ID_KEY);
+  state.counterName = storedName.trim();
+  state.deviceId = storedDeviceId || generateDeviceId();
+  elements.counterName.value = storedName;
+  if (!storedDeviceId) {
+    localStorage.setItem(DEVICE_ID_KEY, state.deviceId);
+  }
 }
 
 async function hydrateResultsDirectory() {
@@ -125,7 +174,7 @@ function populateWeekSelect() {
   });
   elements.weekSelect.innerHTML = options.join("");
   renderFacilityOptions();
-  updateSelectionSummary();
+  void refreshSelectionSummary();
 }
 
 function renderFacilityOptions() {
@@ -138,7 +187,13 @@ function renderFacilityOptions() {
 
   Object.entries(week.facilities ?? {}).forEach(([facilityName, facility]) => {
     const node = elements.facilityOptionTemplate.content.firstElementChild.cloneNode(true);
-    const progress = getSessionProgress(week.id, facilityName, facility.locations ?? []);
+    const countKey = buildCountKey(week.id, facilityName);
+    const progress = state.sharedStatus?.key === countKey
+      ? calculateSessionProgress(
+        choosePreferredSession(loadSession(week.id, facilityName), state.sharedStatus?.session),
+        facility.locations ?? [],
+      )
+      : getSessionProgress(week.id, facilityName, facility.locations ?? []);
 
     node.dataset.facility = facilityName;
     node.querySelector(".facility-card__name").textContent = facilityName;
@@ -148,56 +203,140 @@ function renderFacilityOptions() {
     node.addEventListener("click", () => {
       state.activeFacility = facilityName;
       renderFacilityOptions();
-      updateSelectionSummary();
+      void refreshSelectionSummary();
     });
 
     elements.facilityOptions.appendChild(node);
   });
 
-  elements.startCount.disabled = !(state.activeWeekId && state.activeFacility);
+  renderStartButtonState();
 }
 
-function updateSelectionSummary() {
+async function refreshSelectionSummary() {
   const week = getActiveWeek();
   const facility = getActiveFacility();
 
   if (!week || !facility) {
+    state.sharedStatus = null;
     elements.summaryLocations.textContent = "--";
     elements.summaryCompleted.textContent = "--";
     elements.summaryVariance.textContent = "--";
+    elements.sharedStatus.textContent = "";
     elements.summaryNote.textContent = week
       ? "Pick a facility to see the current progress."
       : "Choose a week and facility to see the sample details.";
-    elements.startCount.disabled = true;
+    renderStartButtonState();
     return;
   }
 
-  const progress = getSessionProgress(week.id, state.activeFacility, facility.locations);
+  await refreshSharedStatus(week.id, state.activeFacility);
+  const progress = calculateSessionProgress(
+    choosePreferredSession(loadSession(week.id, state.activeFacility), state.sharedStatus?.session),
+    facility.locations,
+  );
   elements.summaryLocations.textContent = String(facility.sampleSize);
   elements.summaryCompleted.textContent = String(progress.completed);
   elements.summaryVariance.textContent = String(progress.totalVariance);
   elements.summaryNote.textContent =
     `${week.company} • ${facility.population} eligible locations in this facility`;
-  elements.startCount.disabled = false;
+  renderSharedStatus();
+  renderStartButtonState();
+  renderFacilityOptions();
 }
 
-function startCountSession() {
+async function startCountSession() {
   const week = getActiveWeek();
   const facility = getActiveFacility();
   if (!week || !facility) {
     return;
   }
 
+  if (!state.counterName) {
+    elements.counterName.focus();
+    window.alert("Enter a counter name before starting so the app can coordinate the shared count.");
+    return;
+  }
+
+  await refreshSharedStatus(week.id, state.activeFacility);
+  const claimResult = await ensureCountClaim(week.id, state.activeFacility);
+  if (!claimResult?.ok) {
+    renderSharedStatus();
+    renderStartButtonState();
+    return;
+  }
+
   const session = loadSession(week.id, state.activeFacility);
-  state.currentIndex = clamp(session.currentIndex ?? 0, 0, Math.max((facility.locations?.length ?? 1) - 1, 0));
+  const sharedSession = await loadSharedSession(week.id, state.activeFacility);
+  const sessionToUse = choosePreferredSession(session, sharedSession);
+  saveSession(week.id, state.activeFacility, sessionToUse);
+  state.currentIndex = clamp(
+    sessionToUse.currentIndex ?? 0,
+    0,
+    Math.max((facility.locations?.length ?? 1) - 1, 0),
+  );
   setActiveScreen("count");
+  startHeartbeat(week.id, state.activeFacility);
   renderCountScreen();
+}
+
+function renderStartButtonState() {
+  const hasBasics = Boolean(state.activeWeekId && state.activeFacility && state.counterName);
+  const status = state.sharedStatus;
+  let label = "Start Count";
+  let disabled = !hasBasics;
+
+  if (status?.type === "claimed-by-me") {
+    label = "Resume Count";
+    disabled = !hasBasics;
+  } else if (status?.type === "claimed-by-other") {
+    label = "Take Over Count";
+    disabled = !hasBasics;
+  } else if (status?.type === "completed") {
+    label = "Reopen Count";
+    disabled = !hasBasics;
+  } else if (status?.type === "available-resume" || status?.type === "available-resume-me") {
+    label = "Resume Count";
+  } else if (hasLocalProgress()) {
+    label = "Resume Count";
+  }
+
+  elements.startCount.textContent = label;
+  elements.startCount.disabled = disabled;
+}
+
+function renderSharedStatus() {
+  elements.sharedStatus.textContent = describeSharedStatus(state.sharedStatus);
 }
 
 function setActiveScreen(screenName) {
   const isSetup = screenName === "setup";
   elements.setupScreen.classList.toggle("screen--active", isSetup);
   elements.countScreen.classList.toggle("screen--active", !isSetup);
+}
+
+function isCountScreenActive() {
+  return elements.countScreen.classList.contains("screen--active");
+}
+
+async function pauseCountSession({ returnToSetup = false } = {}) {
+  const week = getActiveWeek();
+  const facility = getActiveFacility();
+
+  if (week && facility && isCountScreenActive()) {
+    saveCurrentEntry(false);
+    const session = loadSession(week.id, state.activeFacility);
+    session.currentIndex = state.currentIndex;
+    saveSession(week.id, state.activeFacility, session);
+    await syncSharedSession();
+  }
+
+  await releaseActiveClaim("paused");
+
+  if (returnToSetup) {
+    setActiveScreen("setup");
+    await refreshSelectionSummary();
+    renderFacilityOptions();
+  }
 }
 
 function renderCountScreen() {
@@ -250,13 +389,16 @@ function adjustVariance(delta) {
     varianceCount: nextValue,
     notes: elements.notesInput.value,
     reviewed: true,
+    updatedBy: state.counterName,
+    updatedByDeviceId: state.deviceId,
     updatedAt: new Date().toISOString(),
   };
   session.currentIndex = state.currentIndex;
   saveSession(week.id, state.activeFacility, session);
   renderCountScreen();
-  updateSelectionSummary();
+  void refreshSelectionSummary();
   renderFacilityOptions();
+  void syncSharedSession();
 }
 
 function saveCurrentEntry(markReviewed = false) {
@@ -276,12 +418,15 @@ function saveCurrentEntry(markReviewed = false) {
     notes: elements.notesInput.value,
     varianceCount: existing.varianceCount ?? 0,
     reviewed: markReviewed || Boolean(existing.reviewed),
+    updatedBy: state.counterName,
+    updatedByDeviceId: state.deviceId,
     updatedAt: new Date().toISOString(),
   };
   session.currentIndex = state.currentIndex;
   saveSession(week.id, state.activeFacility, session);
-  updateSelectionSummary();
+  void refreshSelectionSummary();
   renderFacilityOptions();
+  void syncSharedSession();
 }
 
 async function moveLocation(direction) {
@@ -297,9 +442,10 @@ async function moveLocation(direction) {
     const outcome = await exportResults({
       preferFolder: true,
       interactive: Boolean(state.resultsDirectoryHandle),
+      markComplete: true,
     });
     setActiveScreen("setup");
-    updateSelectionSummary();
+    await refreshSelectionSummary();
     renderFacilityOptions();
     window.alert(buildExportMessage(outcome, true));
     return;
@@ -309,11 +455,12 @@ async function moveLocation(direction) {
   const session = loadSession(week.id, state.activeFacility);
   session.currentIndex = state.currentIndex;
   saveSession(week.id, state.activeFacility, session);
+  void syncSharedSession();
   renderCountScreen();
 }
 
 async function handleManualExport() {
-  const outcome = await exportResults({ preferFolder: true, interactive: true });
+  const outcome = await exportResults({ preferFolder: true, interactive: true, markComplete: false });
   if (outcome) {
     window.alert(buildExportMessage(outcome, false));
   }
@@ -332,16 +479,23 @@ async function exportResults(options = {}) {
   if (shouldPreferFolder) {
     const saveOutcome = await saveResultsToDirectory(exportData, options.interactive === true);
     if (saveOutcome) {
+      if (options.markComplete) {
+        await markCountCompleted(week, facility, saveOutcome.filename);
+      }
       return saveOutcome;
     }
   }
 
   downloadCsv(exportData.filename, exportData.csvContent);
-  return {
+  const outcome = {
     method: "download",
     filename: exportData.filename,
     reason: state.supportsFolderSave ? "download-fallback" : "unsupported",
   };
+  if (options.markComplete) {
+    await markCountCompleted(week, facility, outcome.filename);
+  }
+  return outcome;
 }
 
 function buildResultsExport(week, facility) {
@@ -356,6 +510,8 @@ function buildResultsExport(week, facility) {
       "facility",
       "source_file",
       "exported_at",
+      "exported_by_counter",
+      "exported_by_device",
       "facility_population",
       "sample_size",
       "completed_locations",
@@ -368,6 +524,8 @@ function buildResultsExport(week, facility) {
       "bin_description",
       "reviewed",
       "variance_count",
+      "last_updated_by",
+      "last_updated_at",
       "notes",
     ],
   ];
@@ -380,6 +538,8 @@ function buildResultsExport(week, facility) {
       state.activeFacility,
       week.sourceFile ?? "",
       exportedAt,
+      state.counterName,
+      state.deviceId,
       facility.population ?? "",
       facility.sampleSize ?? "",
       progress.completed,
@@ -392,6 +552,8 @@ function buildResultsExport(week, facility) {
       location.binDescription ?? "",
       entry.reviewed ?? false,
       entry.varianceCount ?? 0,
+      entry.updatedBy ?? "",
+      entry.updatedAt ?? "",
       entry.notes ?? "",
     ]);
   });
@@ -489,8 +651,9 @@ async function chooseResultsFolder() {
   }
 
   updateResultsFolderUI(
-    `Direct save is ready for folder "${directoryHandle.name}". Finish Count will try to write the results CSV there.`,
+    `Direct save and shared coordination are ready for folder "${directoryHandle.name}". Finish Count will try to write the results CSV there.`,
   );
+  await refreshSelectionSummary();
 }
 
 async function clearResultsFolder() {
@@ -504,6 +667,7 @@ async function clearResultsFolder() {
   }
 
   updateResultsFolderUI();
+  await refreshSelectionSummary();
 }
 
 async function verifyDirectoryPermission(directoryHandle, askForPermission) {
@@ -536,6 +700,468 @@ async function verifyDirectoryPermission(directoryHandle, askForPermission) {
   return false;
 }
 
+async function refreshSharedStatus(weekId, facilityName) {
+  if (!weekId || !facilityName) {
+    state.sharedStatus = null;
+    return null;
+  }
+
+  if (!state.resultsDirectoryHandle) {
+    state.sharedStatus = {
+      type: state.supportsFolderSave ? "folder-not-selected" : "local-only",
+    };
+    return state.sharedStatus;
+  }
+
+  const key = buildCountKey(weekId, facilityName);
+  const [claim, session, status] = await Promise.all([
+    readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`),
+    readRuntimeJson(SESSIONS_DIR_NAME, `${key}.json`),
+    readRuntimeJson(STATUS_DIR_NAME, `${key}.json`),
+  ]);
+
+  const activeClaim = claim && !isClaimExpired(claim) ? claim : null;
+  let type = "available";
+
+  if (activeClaim) {
+    type = isOwnedByCurrentCounter(activeClaim) ? "claimed-by-me" : "claimed-by-other";
+  } else if (status?.state === "completed") {
+    type = "completed";
+  } else if (session?.lastUpdatedAt) {
+    type = isOwnedByCurrentCounter(session) ? "available-resume-me" : "available-resume";
+  }
+
+  state.sharedStatus = {
+    type,
+    key,
+    claim: activeClaim,
+    session,
+    status,
+  };
+  return state.sharedStatus;
+}
+
+function describeSharedStatus(sharedStatus) {
+  if (!sharedStatus) {
+    return "";
+  }
+
+  if (sharedStatus.type === "folder-not-selected") {
+    return "Shared coordination is inactive until a Results folder is selected.";
+  }
+
+  if (sharedStatus.type === "local-only") {
+    return "This browser is running in local-only mode. Other devices will not see this session.";
+  }
+
+  if (sharedStatus.type === "claimed-by-me") {
+    return "This count is currently claimed by you. Resume when you're ready.";
+  }
+
+  if (sharedStatus.type === "claimed-by-other") {
+    return `In progress by ${sharedStatus.claim?.counterName || "another counter"} • last seen ${formatTimestamp(sharedStatus.claim?.lastSeenAt)}.`;
+  }
+
+  if (sharedStatus.type === "completed") {
+    return `Completed by ${sharedStatus.status?.counterName || "a counter"} at ${formatTimestamp(sharedStatus.status?.completedAt)}. Starting again will reopen the count.`;
+  }
+
+  if (sharedStatus.type === "available-resume-me") {
+    return `Your shared progress is saved from ${formatTimestamp(sharedStatus.session?.lastUpdatedAt)}. Starting will resume it.`;
+  }
+
+  if (sharedStatus.type === "available-resume") {
+    return `Shared progress exists from ${sharedStatus.session?.counterName || "another counter"} • last updated ${formatTimestamp(sharedStatus.session?.lastUpdatedAt)}. Starting will continue that work.`;
+  }
+
+  return "Shared count is available to claim.";
+}
+
+async function ensureCountClaim(weekId, facilityName) {
+  if (!state.resultsDirectoryHandle) {
+    return { ok: true, mode: "local-only" };
+  }
+
+  const key = buildCountKey(weekId, facilityName);
+  if (state.activeClaimKey && state.activeClaimKey !== key) {
+    await releaseActiveClaim("paused");
+  }
+
+  const currentStatus = state.sharedStatus?.key === key
+    ? state.sharedStatus
+    : await refreshSharedStatus(weekId, facilityName);
+
+  if (currentStatus?.type === "claimed-by-other") {
+    const shouldTakeOver = window.confirm(
+      `${currentStatus.claim?.counterName || "Another counter"} is already working this count. Taking over will move the shared lock to you. Continue?`,
+    );
+    if (!shouldTakeOver) {
+      return { ok: false, reason: "claimed-by-other" };
+    }
+  }
+
+  if (currentStatus?.type === "completed") {
+    const shouldReopen = window.confirm(
+      `This count was completed by ${currentStatus.status?.counterName || "another counter"}. Reopen it and continue from the saved progress?`,
+    );
+    if (!shouldReopen) {
+      return { ok: false, reason: "completed" };
+    }
+  }
+
+  const now = Date.now();
+  const existingClaim = currentStatus?.claim;
+  const claim = {
+    key,
+    weekId,
+    facilityName,
+    counterName: state.counterName,
+    deviceId: state.deviceId,
+    sessionId: existingClaim?.sessionId || generateDeviceId(),
+    claimedAt: existingClaim?.claimedAt || new Date(now).toISOString(),
+    lastSeenAt: new Date(now).toISOString(),
+    expiresAt: new Date(now + CLAIM_LEASE_MS).toISOString(),
+  };
+
+  await writeRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`, claim);
+  await writeRuntimeJson(STATUS_DIR_NAME, `${key}.json`, {
+    state: "in_progress",
+    key,
+    weekId,
+    facilityName,
+    counterName: state.counterName,
+    deviceId: state.deviceId,
+    lastSeenAt: claim.lastSeenAt,
+  });
+
+  const confirmedClaim = await readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`);
+  if (!confirmedClaim || confirmedClaim.sessionId !== claim.sessionId) {
+    await refreshSharedStatus(weekId, facilityName);
+    return { ok: false, reason: "claim-conflict" };
+  }
+
+  state.activeClaimKey = key;
+  state.activeClaimContext = { key, weekId, facilityName };
+  await refreshSharedStatus(weekId, facilityName);
+  return { ok: true, claim };
+}
+
+function startHeartbeat(weekId, facilityName) {
+  stopHeartbeat();
+  state.activeClaimContext = {
+    key: buildCountKey(weekId, facilityName),
+    weekId,
+    facilityName,
+  };
+  void pulseHeartbeat();
+  state.heartbeatId = window.setInterval(() => {
+    void pulseHeartbeat();
+  }, HEARTBEAT_INTERVAL_MS);
+}
+
+function stopHeartbeat() {
+  if (state.heartbeatId) {
+    window.clearInterval(state.heartbeatId);
+    state.heartbeatId = null;
+  }
+}
+
+async function pulseHeartbeat() {
+  if (!state.activeClaimContext || !state.resultsDirectoryHandle || document.hidden) {
+    return;
+  }
+
+  const { key, weekId, facilityName } = state.activeClaimContext;
+  const existingClaim = await readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`);
+  if (existingClaim && !isOwnedByCurrentCounter(existingClaim)) {
+    await handleClaimLost(weekId, facilityName, existingClaim);
+    return;
+  }
+
+  const now = Date.now();
+  const updatedClaim = {
+    key,
+    weekId,
+    facilityName,
+    counterName: state.counterName,
+    deviceId: state.deviceId,
+    sessionId: existingClaim?.sessionId || generateDeviceId(),
+    claimedAt: existingClaim?.claimedAt || new Date(now).toISOString(),
+    lastSeenAt: new Date(now).toISOString(),
+    expiresAt: new Date(now + CLAIM_LEASE_MS).toISOString(),
+  };
+
+  await writeRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`, updatedClaim);
+  await writeRuntimeJson(STATUS_DIR_NAME, `${key}.json`, {
+    state: "in_progress",
+    key,
+    weekId,
+    facilityName,
+    counterName: state.counterName,
+    deviceId: state.deviceId,
+    lastSeenAt: updatedClaim.lastSeenAt,
+  });
+}
+
+async function loadSharedSession(weekId, facilityName) {
+  if (!state.resultsDirectoryHandle) {
+    return null;
+  }
+
+  const key = buildCountKey(weekId, facilityName);
+  return readRuntimeJson(SESSIONS_DIR_NAME, `${key}.json`);
+}
+
+function choosePreferredSession(localSession, sharedSession) {
+  if (!sharedSession) {
+    return normalizeSession(localSession);
+  }
+
+  const localStamp = getSessionTimestamp(localSession);
+  const sharedStamp = getSessionTimestamp(sharedSession);
+  return sharedStamp > localStamp ? normalizeSession(sharedSession) : normalizeSession(localSession);
+}
+
+async function syncSharedSession() {
+  if (!state.activeClaimContext || !state.resultsDirectoryHandle) {
+    return;
+  }
+
+  const { key, weekId, facilityName } = state.activeClaimContext;
+  const activeClaim = await readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`);
+  if (activeClaim && !isClaimExpired(activeClaim) && !isOwnedByCurrentCounter(activeClaim)) {
+    await handleClaimLost(weekId, facilityName, activeClaim);
+    return;
+  }
+
+  const localSession = loadSession(weekId, facilityName);
+  const payload = {
+    key,
+    weekId,
+    facilityName,
+    counterName: state.counterName,
+    deviceId: state.deviceId,
+    currentIndex: localSession.currentIndex ?? 0,
+    entries: localSession.entries ?? {},
+    lastUpdatedAt: new Date().toISOString(),
+  };
+
+  await writeRuntimeJson(SESSIONS_DIR_NAME, `${key}.json`, payload);
+}
+
+async function handleClaimLost(weekId, facilityName, claim) {
+  stopHeartbeat();
+  state.activeClaimKey = "";
+  state.activeClaimContext = null;
+  await refreshSharedStatus(weekId, facilityName);
+  renderSharedStatus();
+  renderStartButtonState();
+  renderFacilityOptions();
+
+  if (!isCountScreenActive()) {
+    return;
+  }
+
+  setActiveScreen("setup");
+  await refreshSelectionSummary();
+  window.alert(
+    `This count was taken over by ${claim?.counterName || "another counter"}. Your last saved progress is still on this device, but the shared lock has moved to them.`,
+  );
+}
+
+async function markCountCompleted(week, facility, resultFileName) {
+  if (state.activeClaimContext) {
+    await syncSharedSession();
+  }
+
+  if (state.resultsDirectoryHandle) {
+    const key = buildCountKey(week.id, state.activeFacility);
+    const progress = getSessionProgress(week.id, state.activeFacility, facility.locations);
+    await writeRuntimeJson(STATUS_DIR_NAME, `${key}.json`, {
+      state: "completed",
+      key,
+      weekId: week.id,
+      facilityName: state.activeFacility,
+      counterName: state.counterName,
+      deviceId: state.deviceId,
+      completedAt: new Date().toISOString(),
+      resultFileName,
+      completedLocations: progress.completed,
+      defectLocations: progress.defectLocations,
+      totalVariance: progress.totalVariance,
+    });
+    await deleteRuntimeFile(CLAIMS_DIR_NAME, `${key}.json`);
+  }
+
+  stopHeartbeat();
+  state.activeClaimKey = "";
+  state.activeClaimContext = null;
+  await refreshSharedStatus(week.id, state.activeFacility);
+}
+
+async function releaseActiveClaim(nextState = "paused") {
+  if (!state.activeClaimContext || !state.resultsDirectoryHandle) {
+    stopHeartbeat();
+    state.activeClaimKey = "";
+    state.activeClaimContext = null;
+    return;
+  }
+
+  const { key, weekId, facilityName } = state.activeClaimContext;
+  const claim = await readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`);
+  if (claim && isOwnedByCurrentCounter(claim)) {
+    await deleteRuntimeFile(CLAIMS_DIR_NAME, `${key}.json`);
+    await writeRuntimeJson(STATUS_DIR_NAME, `${key}.json`, {
+      state: nextState,
+      key,
+      weekId,
+      facilityName,
+      counterName: state.counterName,
+      deviceId: state.deviceId,
+      lastSeenAt: new Date().toISOString(),
+    });
+  }
+
+  stopHeartbeat();
+  state.activeClaimKey = "";
+  state.activeClaimContext = null;
+}
+
+function hasLocalProgress() {
+  const week = getActiveWeek();
+  const facility = getActiveFacility();
+  if (!week || !facility) {
+    return false;
+  }
+  const session = loadSession(week.id, state.activeFacility);
+  return Boolean(Object.keys(session.entries ?? {}).length);
+}
+
+function normalizeSession(session) {
+  return {
+    currentIndex: Number(session?.currentIndex ?? 0),
+    entries: session?.entries ?? {},
+  };
+}
+
+function getSessionTimestamp(session) {
+  if (!session) {
+    return 0;
+  }
+  const directStamp = Date.parse(session.lastUpdatedAt ?? "");
+  if (Number.isFinite(directStamp)) {
+    return directStamp;
+  }
+  return Math.max(
+    0,
+    ...Object.values(session.entries ?? {}).map((entry) => Date.parse(entry?.updatedAt ?? "") || 0),
+  );
+}
+
+function buildCountKey(weekId, facilityName) {
+  return `${weekId}--${slugify(facilityName)}`;
+}
+
+function slugify(value) {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function isOwnedByCurrentCounter(record) {
+  if (!record) {
+    return false;
+  }
+
+  if (record.deviceId && state.deviceId) {
+    return record.deviceId === state.deviceId;
+  }
+
+  return Boolean(record.counterName && state.counterName && record.counterName === state.counterName);
+}
+
+function isClaimExpired(claim) {
+  return Date.parse(claim?.expiresAt ?? "") <= Date.now();
+}
+
+function formatTimestamp(value) {
+  const stamp = Date.parse(value ?? "");
+  if (!Number.isFinite(stamp)) {
+    return "recently";
+  }
+  return new Date(stamp).toLocaleString([], {
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+async function getRuntimeDirectory(directoryName, create = false) {
+  const base = state.resultsDirectoryHandle;
+  if (!base) {
+    return null;
+  }
+
+  try {
+    const runtime = await base.getDirectoryHandle(RUNTIME_DIR_NAME, { create });
+    return runtime.getDirectoryHandle(directoryName, { create });
+  } catch (error) {
+    if (error?.name === "NotFoundError") {
+      return null;
+    }
+    throw error;
+  }
+}
+
+async function readRuntimeJson(directoryName, fileName) {
+  const directory = await getRuntimeDirectory(directoryName, false);
+  if (!directory) {
+    return null;
+  }
+
+  try {
+    const fileHandle = await directory.getFileHandle(fileName);
+    const file = await fileHandle.getFile();
+    return JSON.parse(await file.text());
+  } catch (error) {
+    if (error?.name === "NotFoundError") {
+      return null;
+    }
+    console.warn(`Unable to read shared runtime file ${fileName}`, error);
+    return null;
+  }
+}
+
+async function writeRuntimeJson(directoryName, fileName, data) {
+  const directory = await getRuntimeDirectory(directoryName, true);
+  if (!directory) {
+    return;
+  }
+
+  const fileHandle = await directory.getFileHandle(fileName, { create: true });
+  const writable = await fileHandle.createWritable();
+  await writable.write(JSON.stringify(data, null, 2));
+  await writable.close();
+}
+
+async function deleteRuntimeFile(directoryName, fileName) {
+  const directory = await getRuntimeDirectory(directoryName, false);
+  if (!directory) {
+    return;
+  }
+
+  try {
+    await directory.removeEntry(fileName);
+  } catch (error) {
+    if (error?.name !== "NotFoundError") {
+      console.warn(`Unable to delete shared runtime file ${fileName}`, error);
+    }
+  }
+}
+
 function updateResultsFolderUI(overrideMessage = "") {
   if (!state.supportsFolderSave) {
     elements.resultsFolderStatus.textContent =
@@ -551,35 +1177,59 @@ function updateResultsFolderUI(overrideMessage = "") {
     elements.resultsFolderStatus.textContent = overrideMessage;
   } else if (state.resultsDirectoryHandle) {
     elements.resultsFolderStatus.textContent =
-      `Direct save is configured for folder "${state.resultsDirectoryName || "Results"}".`;
+      `Direct save and shared coordination are configured for folder "${state.resultsDirectoryName || "Results"}".`;
   } else {
     elements.resultsFolderStatus.textContent =
-      "No results folder is selected yet. Choose the device's local IRDR/Results folder to save files there directly.";
+      "No results folder is selected yet. Choose the device's local IRDR/Results folder to turn on direct save and shared coordination.";
   }
 
   elements.chooseResultsFolder.disabled = false;
   elements.clearResultsFolder.disabled = !state.resultsDirectoryHandle;
   elements.sessionNote.innerHTML = state.resultsDirectoryHandle
-    ? "Tapping <strong>Finish Count</strong> on the last location will try to save straight into the selected results folder. If that fails, the CSV will download to the device."
+    ? "Leaving the count screen pauses your shared claim, keeps the latest progress available to resume, and <strong>Finish Count</strong> will try to save straight into the selected results folder."
     : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.";
 }
 
-function resetSession() {
+async function resetSession() {
   const week = getActiveWeek();
   const facility = getActiveFacility();
   if (!week || !facility) {
     return;
   }
 
-  const confirmed = window.confirm(`Reset saved progress for ${state.activeFacility} on ${week.label}?`);
+  const confirmed = window.confirm(
+    `Reset saved progress for ${state.activeFacility} on ${week.label}? This clears the shared session too.`,
+  );
   if (!confirmed) {
     return;
   }
 
+  const key = buildCountKey(week.id, state.activeFacility);
+  if (state.resultsDirectoryHandle) {
+    const claim = await readRuntimeJson(CLAIMS_DIR_NAME, `${key}.json`);
+    if (claim && !isClaimExpired(claim) && !isOwnedByCurrentCounter(claim)) {
+      window.alert(
+        `This count is currently claimed by ${claim.counterName || "another counter"}. Ask them to pause first, or wait for the lock to expire before resetting it.`,
+      );
+      await refreshSelectionSummary();
+      renderFacilityOptions();
+      return;
+    }
+
+    await deleteRuntimeFile(SESSIONS_DIR_NAME, `${key}.json`);
+    await deleteRuntimeFile(CLAIMS_DIR_NAME, `${key}.json`);
+    await deleteRuntimeFile(STATUS_DIR_NAME, `${key}.json`);
+  }
+
   localStorage.removeItem(getSessionKey(week.id, state.activeFacility));
+  if (state.activeClaimContext?.key === key) {
+    stopHeartbeat();
+    state.activeClaimKey = "";
+    state.activeClaimContext = null;
+  }
   state.currentIndex = 0;
-  renderCountScreen();
-  updateSelectionSummary();
+  setActiveScreen("setup");
+  await refreshSelectionSummary();
   renderFacilityOptions();
 }
 
@@ -596,7 +1246,10 @@ function getActiveFacility() {
 }
 
 function getSessionProgress(weekId, facilityName, locations) {
-  const session = loadSession(weekId, facilityName);
+  return calculateSessionProgress(loadSession(weekId, facilityName), locations);
+}
+
+function calculateSessionProgress(session, locations) {
   let completed = 0;
   let totalVariance = 0;
   let defectLocations = 0;
@@ -700,6 +1353,14 @@ function buildResultsFileName(weekId, facilityName, exportedAt) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function generateDeviceId() {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+
+  return `device-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 function supportsDirectorySave() {

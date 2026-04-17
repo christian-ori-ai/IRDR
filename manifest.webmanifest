@@ -9,13 +9,13 @@
   "description": "Mobile-friendly weekly IRDR counting app for Spokane Stock Yards.",
   "icons": [
     {
-      "src": "assets/icon-192.svg?v=20260417b",
+      "src": "assets/icon-192.svg?v=20260417c",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "assets/icon-512.svg?v=20260417b",
+      "src": "assets/icon-512.svg?v=20260417c",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"

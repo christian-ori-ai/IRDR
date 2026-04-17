@@ -8,6 +8,7 @@ A small GitHub Pages app for weekly IRDR counting on mobile devices.
 - Shows count locations in a flashcard-style mobile workflow
 - Tracks cases incorrect or missing with `+` and `-`
 - Saves notes and progress in the browser with `localStorage`
+- Supports shared count coordination through the selected `Results` folder so one device can pause and another can resume
 - Saves results directly into a user-selected local folder on compatible Chromium/Android devices
 - Falls back to downloading the results CSV when direct folder save is unavailable
 - Supports install-style behavior with a web manifest and service worker
@@ -16,7 +17,7 @@ A small GitHub Pages app for weekly IRDR counting on mobile devices.
 
 - `index.html`: app shell for GitHub Pages
 - `assets/styles.css`: mobile-first styling
-- `assets/app.js`: app logic and local progress handling
+- `assets/app.js`: app logic, shared count coordination, and local progress handling
 - `data/samples.json`: week and facility sample data used by the app
 - `Results/`: place exported count-result CSV files here after they are collected from phones
 - `scripts/export_irdr_sample.py`: converts an IRDR workbook into `samples.json`
@@ -35,6 +36,9 @@ That command updates `data/samples.json` so the site uses the newest workbook da
 
 - While a count is in progress, results are stored on the device in the browser.
 - On compatible Chromium browsers, the user can tap `Choose Results Folder` and select the device's local `IRDR/Results` folder.
+- Selecting that folder also turns on shared coordination for the chosen week and facility by storing lightweight runtime files in `Results/.irdr-runtime/`.
+- Leaving the count screen pauses the shared claim, keeps the latest progress in the shared runtime state, and lets another counter resume or take over if needed.
+- If another device already has the count open, the app will show that status and ask before taking over the shared lock.
 - If that folder has been granted write access, tapping `Finish Count` will try to save the CSV directly there.
 - If folder access is not supported or permission is unavailable, the app falls back to downloading the CSV.
 - You can also use `Save or Download Results` during the count if needed.
