@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="ring" x1="14" y1="78" x2="110" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9A58F4"/>
+      <stop offset="0.56" stop-color="#6D78FF"/>
+      <stop offset="1" stop-color="#58AAFF"/>
+    </linearGradient>
+    <linearGradient id="dots" x1="28" y1="78" x2="54" y2="108" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A965FF"/>
+      <stop offset="1" stop-color="#6D78FF"/>
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M20 72C20 44.386 42.386 22 70 22C97.614 22 120 44.386 120 72C120 99.614 97.614 122 70 122C59.86 122 50.426 118.98 42.552 113.792"
+    stroke="url(#ring)"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+
+  <rect x="14" y="68" width="7" height="18" rx="3.5" fill="#8B53F1"/>
+  <rect x="24" y="74" width="7" height="18" rx="3.5" fill="#7F61F8"/>
+
+  <circle cx="22" cy="91" r="5.4" fill="url(#dots)"/>
+  <circle cx="30" cy="103" r="4.8" fill="url(#dots)" opacity="0.92"/>
+  <circle cx="40" cy="112" r="4.4" fill="url(#dots)" opacity="0.84"/>
+  <circle cx="48" cy="93" r="3.8" fill="url(#dots)" opacity="0.86"/>
+  <circle cx="56" cy="102" r="3.5" fill="url(#dots)" opacity="0.72"/>
+  <circle cx="63" cy="112" r="2.6" fill="url(#dots)" opacity="0.56"/>
+  <circle cx="39" cy="84" r="3.1" fill="url(#dots)" opacity="0.64"/>
+  <circle cx="71" cy="121" r="2.2" fill="url(#dots)" opacity="0.38"/>
+</svg>
