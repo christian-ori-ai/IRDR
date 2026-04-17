@@ -1,12 +1,13 @@
-const CACHE_NAME = "irdr-mobile-v1";
+const CACHE_NAME = "irdr-mobile-v2-20260417b";
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./assets/styles.css",
-  "./assets/app.js",
-  "./assets/icon-192.svg",
-  "./assets/icon-512.svg",
-  "./manifest.webmanifest",
+  "./assets/styles.css?v=20260417b",
+  "./assets/app.js?v=20260417b",
+  "./assets/icon-192.svg?v=20260417b",
+  "./assets/icon-512.svg?v=20260417b",
+  "./assets/dev-mark.svg?v=20260417b",
+  "./manifest.webmanifest?v=20260417b",
   "./data/samples.json",
 ];
 
