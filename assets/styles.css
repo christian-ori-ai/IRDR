@@ -346,6 +346,10 @@ code {
   justify-content: space-between;
 }
 
+.session-tools {
+  flex-wrap: wrap;
+}
+
 .button {
   min-height: 52px;
   padding: 14px 20px;

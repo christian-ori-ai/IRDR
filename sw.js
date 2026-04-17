@@ -1,13 +1,15 @@
-const CACHE_NAME = "irdr-mobile-v2-20260417e";
+const CACHE_NAME = "irdr-mobile-v2-20260417f";
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./assets/styles.css?v=20260417e",
-  "./assets/app.js?v=20260417e",
-  "./assets/icon-192.svg?v=20260417e",
-  "./assets/icon-512.svg?v=20260417e",
-  "./assets/dev-mark.svg?v=20260417e",
-  "./manifest.webmanifest?v=20260417e",
+  "./assets/styles.css?v=20260417f",
+  "./assets/app.js?v=20260417f",
+  "./assets/onedrive-config.js?v=20260417f",
+  "./assets/vendor/msal-browser.min.js?v=20260417f",
+  "./assets/icon-192.svg?v=20260417f",
+  "./assets/icon-512.svg?v=20260417f",
+  "./assets/dev-mark.svg?v=20260417f",
+  "./manifest.webmanifest?v=20260417f",
   "./data/samples.json",
 ];
 
@@ -26,7 +28,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") {
+  const requestUrl = new URL(event.request.url);
+  if (event.request.method !== "GET" || requestUrl.origin !== self.location.origin) {
     return;
   }
 

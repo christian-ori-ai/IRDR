@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>IRDR Mobile Count</title>
-  <link rel="manifest" href="manifest.webmanifest?v=20260417e">
-  <link rel="icon" href="assets/icon-192.svg?v=20260417e" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/styles.css?v=20260417e">
+  <link rel="manifest" href="manifest.webmanifest?v=20260417f">
+  <link rel="icon" href="assets/icon-192.svg?v=20260417f" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=20260417f">
 </head>
 <body>
   <div class="background-glow" aria-hidden="true"></div>
@@ -94,6 +94,16 @@
             </p>
           </div>
 
+          <div class="results-note">
+            <p class="results-note__title">OneDrive Upload</p>
+            <p id="onedrive-status" class="results-note__body">Checking OneDrive upload setup...</p>
+            <div class="results-actions">
+              <button id="connect-onedrive" class="button button--secondary" type="button">Connect OneDrive</button>
+              <button id="disconnect-onedrive" class="button button--ghost" type="button">Disconnect</button>
+            </div>
+            <p id="onedrive-footnote" class="results-note__foot"></p>
+          </div>
+
           <div class="panel__actions">
             <button id="start-count" class="button button--primary" disabled>Start Count</button>
           </div>
@@ -165,6 +175,7 @@
 
           <div class="session-tools">
             <button id="export-results" class="button button--ghost" type="button">Save or Download Results</button>
+            <button id="upload-onedrive" class="button button--ghost" type="button" hidden>Upload to OneDrive</button>
             <button id="share-results" class="button button--ghost" type="button" hidden>Share Results</button>
             <button id="reset-session" class="button button--ghost" type="button">Reset Progress</button>
           </div>
@@ -177,7 +188,7 @@
     </main>
   </div>
 
-  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417e" alt="" aria-hidden="true">
+  <img class="dev-mark" src="assets/dev-mark.svg?v=20260417f" alt="" aria-hidden="true">
 
   <template id="facility-option-template">
     <button class="facility-card" type="button">
@@ -186,6 +197,7 @@
     </button>
   </template>
 
-  <script src="assets/app.js?v=20260417e" type="module"></script>
+  <script src="assets/vendor/msal-browser.min.js?v=20260417f"></script>
+  <script src="assets/app.js?v=20260417f" type="module"></script>
 </body>
 </html>

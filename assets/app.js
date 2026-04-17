@@ -1,3 +1,5 @@
+import { oneDriveConfig } from "./onedrive-config.js?v=20260417f";
+
 const SETTINGS_DB_NAME = "irdr-mobile";
 const SETTINGS_STORE_NAME = "settings";
 const RESULTS_DIRECTORY_KEY = "results-directory-handle";
@@ -20,6 +22,13 @@ const state = {
   resultsDirectoryHandle: null,
   resultsDirectoryName: "",
   resultsDirectoryNeedsReconnect: false,
+  oneDriveConfigured: false,
+  oneDriveReady: false,
+  oneDriveBusy: false,
+  oneDriveClient: null,
+  oneDriveAccount: null,
+  oneDriveUploadFolderId: "",
+  oneDriveUploadFolderWebUrl: "",
   counterName: "",
   deviceId: "",
   sharedStatus: null,
@@ -44,6 +53,10 @@ const elements = {
   resultsFolderStatus: document.getElementById("results-folder-status"),
   chooseResultsFolder: document.getElementById("choose-results-folder"),
   clearResultsFolder: document.getElementById("clear-results-folder"),
+  oneDriveStatus: document.getElementById("onedrive-status"),
+  oneDriveFootnote: document.getElementById("onedrive-footnote"),
+  connectOneDrive: document.getElementById("connect-onedrive"),
+  disconnectOneDrive: document.getElementById("disconnect-onedrive"),
   activeWeek: document.getElementById("active-week"),
   activeFacility: document.getElementById("active-facility"),
   progressLabel: document.getElementById("progress-label"),
@@ -62,6 +75,7 @@ const elements = {
   nextLocation: document.getElementById("next-location"),
   backToSetup: document.getElementById("back-to-setup"),
   exportResults: document.getElementById("export-results"),
+  uploadOneDrive: document.getElementById("upload-onedrive"),
   shareResults: document.getElementById("share-results"),
   resetSession: document.getElementById("reset-session"),
   sessionNote: document.getElementById("session-note"),
@@ -74,6 +88,7 @@ async function init() {
   state.supportsFileShare = supportsFileShare();
   hydrateOperatorIdentity();
   registerServiceWorker();
+  await initializeOneDrive();
   bindEvents();
   await hydrateResultsDirectory();
 
@@ -133,6 +148,15 @@ function bindEvents() {
   elements.clearResultsFolder.addEventListener("click", () => {
     void clearResultsFolder();
   });
+  elements.connectOneDrive.addEventListener("click", () => {
+    void connectOneDrive();
+  });
+  elements.disconnectOneDrive.addEventListener("click", () => {
+    void disconnectOneDrive();
+  });
+  elements.uploadOneDrive.addEventListener("click", () => {
+    void handleManualOneDriveUpload();
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       saveCountSnapshot();
@@ -154,6 +178,155 @@ function hydrateOperatorIdentity() {
   if (!storedDeviceId) {
     localStorage.setItem(DEVICE_ID_KEY, state.deviceId);
   }
+}
+
+async function initializeOneDrive() {
+  state.oneDriveConfigured = hasConfiguredOneDrive();
+  renderOneDriveUI();
+
+  if (!state.oneDriveConfigured) {
+    return;
+  }
+
+  if (!window.msal?.PublicClientApplication) {
+    elements.oneDriveStatus.textContent =
+      "Microsoft sign-in could not be loaded on this page, so OneDrive upload is unavailable right now.";
+    elements.oneDriveFootnote.textContent =
+      "The local auth library is missing or blocked. The app can still save, share, and download results locally.";
+    return;
+  }
+
+  try {
+    state.oneDriveClient = new window.msal.PublicClientApplication({
+      auth: {
+        clientId: oneDriveConfig.clientId,
+        authority: oneDriveConfig.authority,
+        redirectUri: oneDriveConfig.redirectUri,
+        postLogoutRedirectUri: oneDriveConfig.postLogoutRedirectUri ?? oneDriveConfig.redirectUri,
+      },
+      cache: {
+        cacheLocation: "localStorage",
+        storeAuthStateInCookie: false,
+      },
+    });
+
+    if (typeof state.oneDriveClient.initialize === "function") {
+      await state.oneDriveClient.initialize();
+    }
+
+    const redirectResult = await state.oneDriveClient.handleRedirectPromise();
+    if (redirectResult?.account) {
+      state.oneDriveClient.setActiveAccount(redirectResult.account);
+    }
+
+    const activeAccount = state.oneDriveClient.getActiveAccount()
+      || state.oneDriveClient.getAllAccounts?.()[0]
+      || null;
+
+    if (activeAccount) {
+      state.oneDriveClient.setActiveAccount(activeAccount);
+    }
+
+    state.oneDriveAccount = activeAccount;
+    state.oneDriveUploadFolderId = "";
+    state.oneDriveUploadFolderWebUrl = "";
+    state.oneDriveReady = true;
+  } catch (error) {
+    console.warn("Unable to initialize Microsoft sign-in", error);
+    elements.oneDriveStatus.textContent =
+      "Microsoft sign-in could not initialize, so OneDrive upload is disabled for now.";
+    elements.oneDriveFootnote.textContent =
+      "The app will still work locally. Recheck assets/onedrive-config.js and the Entra app redirect URI if you want direct OneDrive upload.";
+  }
+
+  renderOneDriveUI();
+}
+
+function hasConfiguredOneDrive() {
+  return Boolean(
+    oneDriveConfig?.enabled
+    && oneDriveConfig.clientId
+    && !String(oneDriveConfig.clientId).includes("YOUR-"),
+  );
+}
+
+function renderOneDriveUI() {
+  const isConnected = Boolean(state.oneDriveAccount);
+  const canConnect = state.oneDriveConfigured && Boolean(state.oneDriveClient || window.msal?.PublicClientApplication);
+
+  if (!state.oneDriveConfigured) {
+    elements.oneDriveStatus.textContent =
+      "OneDrive upload is off until assets/onedrive-config.js has a real Entra app client ID and enabled is set to true.";
+    elements.oneDriveFootnote.textContent =
+      `When you are ready, register the GitHub Pages URL as a SPA redirect URI and point uploadPath at the OneDrive folder you want, such as ${getOneDriveUploadPathDisplay()}.`;
+  } else if (!state.oneDriveReady) {
+    elements.oneDriveStatus.textContent = "Preparing Microsoft sign-in for direct OneDrive upload...";
+    elements.oneDriveFootnote.textContent =
+      `Once connected, the app can upload the results CSV into OneDrive/${getOneDriveUploadPathDisplay()}.`;
+  } else if (isConnected) {
+    elements.oneDriveStatus.textContent = `Connected to OneDrive as ${state.oneDriveAccount.username || "your Microsoft account"}.`;
+    elements.oneDriveFootnote.textContent =
+      `Finish & Upload will send the CSV to OneDrive/${getOneDriveUploadPathDisplay()} while still keeping the local export fallback.`;
+  } else {
+    elements.oneDriveStatus.textContent =
+      "OneDrive upload is configured, but this device is not connected yet.";
+    elements.oneDriveFootnote.textContent =
+      `Connect once on this device and the app can upload straight into OneDrive/${getOneDriveUploadPathDisplay()} without relying on folder picking.`;
+  }
+
+  elements.connectOneDrive.disabled = !canConnect || state.oneDriveBusy || isConnected;
+  elements.disconnectOneDrive.disabled = !isConnected || state.oneDriveBusy;
+  elements.uploadOneDrive.hidden = !isConnected;
+}
+
+async function connectOneDrive() {
+  if (!state.oneDriveConfigured || !state.oneDriveClient) {
+    renderOneDriveUI();
+    return;
+  }
+
+  state.oneDriveBusy = true;
+  renderOneDriveUI();
+
+  try {
+    await state.oneDriveClient.loginRedirect({
+      scopes: getOneDriveScopes(),
+      prompt: "select_account",
+    });
+  } catch (error) {
+    state.oneDriveBusy = false;
+    console.warn("Unable to start Microsoft sign-in", error);
+    elements.oneDriveStatus.textContent =
+      "The app could not start Microsoft sign-in just now. You can still count locally and try connecting again later.";
+    renderOneDriveUI();
+  }
+}
+
+async function disconnectOneDrive() {
+  if (!state.oneDriveClient || !state.oneDriveAccount) {
+    renderOneDriveUI();
+    return;
+  }
+
+  state.oneDriveBusy = true;
+  renderOneDriveUI();
+
+  try {
+    await state.oneDriveClient.logoutRedirect({
+      account: state.oneDriveAccount,
+      postLogoutRedirectUri: oneDriveConfig.postLogoutRedirectUri ?? oneDriveConfig.redirectUri,
+    });
+  } catch (error) {
+    state.oneDriveBusy = false;
+    console.warn("Unable to sign out of Microsoft", error);
+    elements.oneDriveStatus.textContent =
+      "The app could not sign out of Microsoft just now. You can still continue counting locally.";
+    renderOneDriveUI();
+  }
+}
+
+function getOneDriveScopes() {
+  return Array.from(new Set(oneDriveConfig.graphScopes ?? ["Files.ReadWrite"]));
 }
 
 async function hydrateResultsDirectory() {
@@ -358,11 +531,15 @@ function renderCountScreen() {
   elements.statusText.textContent = getStatusText(entry.varianceCount ?? 0);
   elements.minusButton.disabled = (entry.varianceCount ?? 0) <= 0;
   elements.previousLocation.disabled = state.currentIndex === 0;
+  elements.uploadOneDrive.hidden = !Boolean(state.oneDriveAccount);
   elements.shareResults.hidden = !state.supportsFileShare;
   elements.nextLocation.textContent =
     state.currentIndex === facility.locations.length - 1
-      ? (state.supportsFileShare ? "Finish & Share" : "Finish Count")
+      ? (shouldAutoUploadToOneDrive()
+        ? "Finish & Upload"
+        : (state.supportsFileShare ? "Finish & Share" : "Finish Count"))
       : "Next Location";
+  elements.sessionNote.innerHTML = buildSessionNoteMessage();
 }
 
 function adjustVariance(delta) {
@@ -436,7 +613,8 @@ async function moveLocation(direction) {
     const outcome = await exportResults({
       preferFolder: true,
       interactive: Boolean(state.resultsDirectoryHandle),
-      share: state.supportsFileShare,
+      share: shouldAutoUploadToOneDrive() ? false : state.supportsFileShare,
+      uploadToOneDrive: shouldAutoUploadToOneDrive(),
     });
     setActiveScreen("setup");
     await refreshSelectionSummary();
@@ -454,7 +632,7 @@ async function moveLocation(direction) {
 }
 
 async function handleManualExport() {
-  const outcome = await exportResults({ preferFolder: true, interactive: true, markComplete: false });
+  const outcome = await exportResults({ preferFolder: true, interactive: true });
   if (outcome) {
     window.alert(buildExportMessage(outcome, false));
   }
@@ -464,8 +642,23 @@ async function handleManualShare() {
   const outcome = await exportResults({
     preferFolder: true,
     interactive: false,
-    markComplete: false,
     share: true,
+  });
+  if (outcome) {
+    window.alert(buildExportMessage(outcome, false));
+  }
+}
+
+async function handleManualOneDriveUpload() {
+  if (!state.oneDriveAccount) {
+    window.alert("Connect OneDrive on the setup screen first, then try the upload again.");
+    return;
+  }
+
+  const outcome = await exportResults({
+    preferFolder: true,
+    interactive: false,
+    uploadToOneDrive: true,
   });
   if (outcome) {
     window.alert(buildExportMessage(outcome, false));
@@ -482,28 +675,35 @@ async function exportResults(options = {}) {
   const exportData = buildResultsExport(week, facility);
   const shouldPreferFolder = options.preferFolder !== false;
   const shareOutcome = options.share ? await shareExportData(exportData) : { status: "not-requested" };
+  let localOutcome = null;
 
   if (shouldPreferFolder) {
     const saveOutcome = await saveResultsToDirectory(exportData, options.interactive === true);
     if (saveOutcome) {
-      if (options.markComplete) {
-        await markCountCompleted(week, facility, saveOutcome.filename);
-      }
-      return { ...saveOutcome, shareStatus: shareOutcome.status };
+      localOutcome = saveOutcome;
     }
   }
 
-  downloadCsv(exportData.filename, exportData.csvContent);
-  const outcome = {
-    method: "download",
-    filename: exportData.filename,
-    reason: state.supportsFolderSave ? "download-fallback" : "unsupported",
-    shareStatus: shareOutcome.status,
-  };
-  if (options.markComplete) {
-    await markCountCompleted(week, facility, outcome.filename);
+  if (!localOutcome) {
+    downloadCsv(exportData.filename, exportData.csvContent);
+    localOutcome = {
+      method: "download",
+      filename: exportData.filename,
+      reason: state.supportsFolderSave ? "download-fallback" : "unsupported",
+    };
   }
-  return outcome;
+
+  const oneDriveOutcome = options.uploadToOneDrive
+    ? await uploadResultsToOneDrive(exportData)
+    : { status: "not-requested" };
+
+  return {
+    ...localOutcome,
+    shareStatus: shareOutcome.status,
+    oneDriveStatus: oneDriveOutcome.status,
+    oneDriveLocation: oneDriveOutcome.location ?? "",
+    oneDriveWebUrl: oneDriveOutcome.webUrl ?? "",
+  };
 }
 
 function buildResultsExport(week, facility) {
@@ -1211,10 +1411,7 @@ function updateResultsFolderUI(overrideMessage = "") {
       "This browser does not expose direct folder save here. Results will download to the device instead.";
     elements.chooseResultsFolder.disabled = true;
     elements.clearResultsFolder.disabled = true;
-    elements.sessionNote.innerHTML =
-      state.supportsFileShare
-        ? "Tapping <strong>Finish &amp; Share</strong> on the last location will open the device share sheet and then download the results CSV to the device."
-        : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV to the device.";
+    elements.sessionNote.innerHTML = buildSessionNoteMessage();
     return;
   }
 
@@ -1230,13 +1427,7 @@ function updateResultsFolderUI(overrideMessage = "") {
 
   elements.chooseResultsFolder.disabled = false;
   elements.clearResultsFolder.disabled = !state.resultsDirectoryHandle;
-  elements.sessionNote.innerHTML = state.resultsDirectoryHandle
-    ? (state.supportsFileShare
-      ? "Progress stays on this device/browser, and <strong>Finish &amp; Share</strong> will open the device share sheet before saving straight into the selected results folder."
-      : "Progress stays on this device/browser, and <strong>Finish Count</strong> will try to save straight into the selected results folder.")
-    : (state.supportsFileShare
-      ? "Progress stays on this device/browser, and <strong>Finish &amp; Share</strong> will open the device share sheet before downloading the CSV unless a results folder has been selected."
-      : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.");
+  elements.sessionNote.innerHTML = buildSessionNoteMessage();
 }
 
 async function resetSession() {
@@ -1341,16 +1532,17 @@ function buildExportMessage(outcome, isComplete) {
   }
 
   const shareMessage = buildShareMessage(outcome.shareStatus);
+  const oneDriveMessage = buildOneDriveMessage(outcome);
 
   if (outcome.method === "folder") {
-    return `${prefix}Results were saved to ${outcome.folderName}/${outcome.filename}.${shareMessage}`;
+    return `${prefix}Results were saved to ${outcome.folderName}/${outcome.filename}.${shareMessage}${oneDriveMessage}`;
   }
 
   if (state.supportsFolderSave && !state.resultsDirectoryHandle) {
-    return `${prefix}Results were downloaded as ${outcome.filename}. Choose the local IRDR/Results folder on the setup screen if you want direct save next time.${shareMessage}`;
+    return `${prefix}Results were downloaded as ${outcome.filename}. Choose the local IRDR/Results folder on the setup screen if you want direct save next time.${shareMessage}${oneDriveMessage}`;
   }
 
-  return `${prefix}Results were downloaded as ${outcome.filename}.${shareMessage}`;
+  return `${prefix}Results were downloaded as ${outcome.filename}.${shareMessage}${oneDriveMessage}`;
 }
 
 function buildShareMessage(shareStatus) {
@@ -1367,6 +1559,193 @@ function buildShareMessage(shareStatus) {
   }
 
   return "";
+}
+
+function buildOneDriveMessage(outcome) {
+  if (outcome.oneDriveStatus === "uploaded") {
+    return outcome.oneDriveLocation
+      ? ` The file was also uploaded to OneDrive at ${outcome.oneDriveLocation}.`
+      : " The file was also uploaded to OneDrive.";
+  }
+
+  if (outcome.oneDriveStatus === "auth-required") {
+    return " OneDrive upload needs you to reconnect your Microsoft account on the setup screen.";
+  }
+
+  if (outcome.oneDriveStatus === "failed") {
+    return " OneDrive upload did not finish, but the local export still succeeded.";
+  }
+
+  return "";
+}
+
+function buildSessionNoteMessage() {
+  if (shouldAutoUploadToOneDrive()) {
+    return "Progress stays on this device/browser, and <strong>Finish &amp; Upload</strong> will also send the CSV to OneDrive while keeping the local export fallback.";
+  }
+
+  if (state.resultsDirectoryHandle) {
+    return state.supportsFileShare
+      ? "Progress stays on this device/browser, and <strong>Finish &amp; Share</strong> will open the device share sheet before saving straight into the selected results folder."
+      : "Progress stays on this device/browser, and <strong>Finish Count</strong> will try to save straight into the selected results folder.";
+  }
+
+  return state.supportsFileShare
+    ? "Progress stays on this device/browser, and <strong>Finish &amp; Share</strong> will open the device share sheet before downloading the CSV unless a results folder has been selected."
+    : "Tapping <strong>Finish Count</strong> on the last location will download the results CSV unless a results folder has been selected.";
+}
+
+function shouldAutoUploadToOneDrive() {
+  return Boolean(state.oneDriveAccount && oneDriveConfig.autoUploadOnFinish !== false);
+}
+
+async function uploadResultsToOneDrive(exportData) {
+  if (!state.oneDriveConfigured) {
+    return { status: "not-configured" };
+  }
+
+  if (!state.oneDriveClient || !state.oneDriveAccount) {
+    return { status: "not-connected" };
+  }
+
+  try {
+    const accessToken = await acquireOneDriveAccessToken();
+    if (!accessToken) {
+      return { status: "auth-required" };
+    }
+
+    const folder = await ensureOneDriveResultsFolder(accessToken);
+    if (!folder?.id) {
+      return { status: "failed" };
+    }
+
+    const response = await fetch(
+      `https://graph.microsoft.com/v1.0/me/drive/items/${folder.id}:/${encodeGraphPathSegment(exportData.filename)}:/content`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "text/csv;charset=utf-8",
+        },
+        body: exportData.csvContent,
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn("OneDrive upload failed", response.status, errorText);
+      return { status: "failed" };
+    }
+
+    const uploadedItem = await response.json();
+    return {
+      status: "uploaded",
+      location: `${getOneDriveUploadPathDisplay()}/${exportData.filename}`,
+      webUrl: uploadedItem.webUrl ?? folder.webUrl ?? "",
+    };
+  } catch (error) {
+    if (isInteractionRequiredError(error)) {
+      return { status: "auth-required" };
+    }
+    console.warn("Unable to upload results to OneDrive", error);
+    return { status: "failed" };
+  }
+}
+
+async function acquireOneDriveAccessToken() {
+  if (!state.oneDriveClient || !state.oneDriveAccount) {
+    return "";
+  }
+
+  try {
+    const tokenResponse = await state.oneDriveClient.acquireTokenSilent({
+      account: state.oneDriveAccount,
+      scopes: getOneDriveScopes(),
+    });
+    return tokenResponse.accessToken;
+  } catch (error) {
+    if (isInteractionRequiredError(error)) {
+      console.warn("OneDrive token needs user interaction again", error);
+      return "";
+    }
+    throw error;
+  }
+}
+
+async function ensureOneDriveResultsFolder(accessToken) {
+  if (state.oneDriveUploadFolderId) {
+    return {
+      id: state.oneDriveUploadFolderId,
+      webUrl: state.oneDriveUploadFolderWebUrl,
+    };
+  }
+
+  let currentFolder = await graphJson("/me/drive/root?$select=id,webUrl", accessToken);
+  for (const segment of getOneDriveUploadPathSegments()) {
+    const children = await graphJson(
+      `/me/drive/items/${currentFolder.id}/children?$select=id,name,webUrl,folder`,
+      accessToken,
+    );
+
+    let nextFolder = (children?.value ?? []).find((child) => child.name === segment && child.folder);
+    if (!nextFolder) {
+      nextFolder = await graphJson(`/me/drive/items/${currentFolder.id}/children`, accessToken, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: segment,
+          folder: {},
+          "@microsoft.graph.conflictBehavior": "fail",
+        }),
+      });
+    }
+
+    currentFolder = nextFolder;
+  }
+
+  state.oneDriveUploadFolderId = currentFolder.id ?? "";
+  state.oneDriveUploadFolderWebUrl = currentFolder.webUrl ?? "";
+  return currentFolder;
+}
+
+async function graphJson(path, accessToken, options = {}) {
+  const response = await fetch(`https://graph.microsoft.com/v1.0${path}`, {
+    method: options.method ?? "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      ...(options.headers ?? {}),
+    },
+    body: options.body,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Graph request failed (${response.status}): ${errorText}`);
+  }
+
+  return response.status === 204 ? null : response.json();
+}
+
+function encodeGraphPathSegment(value) {
+  return encodeURIComponent(String(value ?? "")).replace(/%2F/g, "/");
+}
+
+function getOneDriveUploadPathSegments() {
+  return String(oneDriveConfig.uploadPath ?? "IRDR/Results")
+    .split("/")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+}
+
+function getOneDriveUploadPathDisplay() {
+  return getOneDriveUploadPathSegments().join("/");
+}
+
+function isInteractionRequiredError(error) {
+  return String(error?.name ?? "").includes("InteractionRequired")
+    || String(error?.errorCode ?? "").includes("interaction_required");
 }
 
 async function shareExportData(exportData) {

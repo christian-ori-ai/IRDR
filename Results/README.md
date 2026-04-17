@@ -6,9 +6,10 @@ Place exported IRDR results files in this folder.
 
 1. On a compatible Chromium-based device, the user taps `Choose Results Folder`.
 2. The user selects this local `Results` folder from the device filesystem.
-3. When the counter taps `Finish Count` or `Finish & Share`, the app tries to write the CSV directly here.
+3. When the counter taps `Finish Count`, `Finish & Share`, or `Finish & Upload`, the app tries to write the CSV directly here.
 4. On share-capable Android browsers, the app can also open the native share sheet so the same CSV can be sent to OneDrive or another installed app.
-5. If folder save is unavailable or permission is denied, the app falls back to downloading the CSV instead.
+5. If Microsoft sign-in is configured in `assets/onedrive-config.js`, the app can also upload the CSV directly to the configured OneDrive folder path, such as `IRDR/Results`.
+6. If folder save is unavailable or permission is denied, the app falls back to downloading the CSV instead.
 
 ## File Format
 
